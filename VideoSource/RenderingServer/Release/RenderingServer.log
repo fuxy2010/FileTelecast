@@ -1,0 +1,376 @@
+﻿Build started 2017/9/17 1:29:58.
+     1>Project "D:\HTML5\RenderingServer\RenderingServer\RenderingServer.vcxproj" on node 2 (build target(s)).
+     1>PrepareForBuild:
+         Creating directory "D:\HTML5\RenderingServer\Release\".
+       InitializeBuildStatus:
+         Creating "Release\RenderingServer.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I.\ /I..\useragent /I..\jrtplib /I..\utility\boost_1_46_1 /I..\utility\tut /I..\utility\H264 /I..\utility\ffmpeg\include /I"..\utility\poco-1.7.6\include" /I..\module /I..\codec /I..\task /I..\thread /I..\misc /I"..\amr-nb" /I..\json /I..\PCMPlayer /I..\sipua /I..\wua /I..\ffmpeg\include /I..\rtmp\include /I..\rtmp /I..\dev\dh /I..\dev\dp /I..\dev /I..\http /I..\dev\hktmcp /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /D WIN32 /D _WINDOWS /D NDEBUG /D OSIP_MT /D _AFXDLL /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Yc"StdAfx.h" /Fp"Release\RenderingServer.pch" /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt stdafx.cpp
+         stdafx.cpp
+         _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+     1>d:\html5\renderingserver\renderingserver\stdafx.h(68): warning C4005: 'ASSERT' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(334) : see previous definition of 'ASSERT'
+     1>d:\html5\renderingserver\renderingserver\stdafx.h(69): warning C4005: 'VERIFY' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(320) : see previous definition of 'VERIFY'
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I.\ /I..\useragent /I..\jrtplib /I..\utility\boost_1_46_1 /I..\utility\tut /I..\utility\H264 /I..\utility\ffmpeg\include /I"..\utility\poco-1.7.6\include" /I..\module /I..\codec /I..\task /I..\thread /I..\misc /I"..\amr-nb" /I..\json /I..\PCMPlayer /I..\sipua /I..\wua /I..\ffmpeg\include /I..\rtmp\include /I..\rtmp /I..\dev\dh /I..\dev\dp /I..\dev /I..\http /I..\dev\hktmcp /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /D WIN32 /D _WINDOWS /D NDEBUG /D OSIP_MT /D _AFXDLL /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ..\codec\WUACodec.cpp ..\http\HttpService.cpp ..\json\jsontest.cpp ..\json\json_reader.cpp ..\json\json_value.cpp ..\json\json_writer.cpp ..\json\main_jsontest.cpp ..\json\main_jsontestrunner.cpp ..\misc\CommandContextParse.cpp ..\misc\ConfigBox.cpp ..\misc\librtmp_send264.cpp ..\misc\Logger.cpp ..\misc\MiscTool.cpp ..\misc\simplest_librtmp_send264.cpp ..\misc\Sizescale.cpp ..\module\JRTPSession.cpp ..\module\ModuleManager.cpp ..\module\RTMPSession.cpp ..\task\VideoPullTask.cpp ..\task\DataRecvTask.cpp ..\task\RTMPPushTask.cpp ..\task\VUASendMediaTask.cpp ..\thread\BaseThread.cpp ..\thread\RegisterThread.cpp ..\thread\TaskThread.cpp ..\useragent\ScheduleServer.cpp ..\useragent\UserAgent.cpp RecodeSound.cpp RenderingServer.cpp RenderingServerDlg.cpp
+         WUACodec.cpp
+         _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+     1>D:\HTML5\RenderingServer\RenderingServer\stdafx.h(68): warning C4005: 'ASSERT' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(334) : see previous definition of 'ASSERT'
+     1>D:\HTML5\RenderingServer\RenderingServer\stdafx.h(69): warning C4005: 'VERIFY' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(320) : see previous definition of 'VERIFY'
+         HttpService.cpp
+         _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+     1>D:\HTML5\RenderingServer\RenderingServer\StdAfx.h(68): warning C4005: 'ASSERT' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(334) : see previous definition of 'ASSERT'
+     1>D:\HTML5\RenderingServer\RenderingServer\StdAfx.h(69): warning C4005: 'VERIFY' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(320) : see previous definition of 'VERIFY'
+     1>D:\HTML5\RenderingServer\rtmp\rtmp_sys.h(43): warning C4005: 'EWOULDBLOCK' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\errno.h(132) : see previous definition of 'EWOULDBLOCK'
+     1>D:\HTML5\RenderingServer\task\RTMPPushTask.h(39): warning C4244: 'initializing' : conversion from 'time_t' to 'unsigned long', possible loss of data
+     1>D:\HTML5\RenderingServer\task\VideoPullTask.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>d:\html5\renderingserver\task\DataRecvTask.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>d:\html5\renderingserver\task\DataRecvTask.h(43): warning C4244: 'initializing' : conversion from 'time_t' to 'unsigned long', possible loss of data
+     1>..\http\HttpService.cpp(617): warning C4101: 'e' : unreferenced local variable
+         jsontest.cpp
+         json_reader.cpp
+         json_value.cpp
+         json_writer.cpp
+         main_jsontest.cpp
+         main_jsontestrunner.cpp
+         CommandContextParse.cpp
+         ConfigBox.cpp
+         librtmp_send264.cpp
+     1>D:\HTML5\RenderingServer\rtmp\rtmp_sys.h(43): warning C4005: 'EWOULDBLOCK' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\errno.h(132) : see previous definition of 'EWOULDBLOCK'
+     1>D:\HTML5\RenderingServer\rtmp\sps_decode.h(59): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+     1>D:\HTML5\RenderingServer\rtmp\sps_decode.h(97): warning C4018: '<' : signed/unsigned mismatch
+     1>D:\HTML5\RenderingServer\rtmp\sps_decode.h(104): warning C4018: '<' : signed/unsigned mismatch
+     1>..\misc\librtmp_send264.cpp(131): warning C4244: 'argument' : conversion from 'uint64_t' to 'uint32_t', possible loss of data
+     1>..\misc\librtmp_send264.cpp(454): warning C4018: '<' : signed/unsigned mismatch
+     1>..\misc\librtmp_send264.cpp(508): warning C4018: '<' : signed/unsigned mismatch
+     1>..\misc\librtmp_send264.cpp(571): warning C4018: '>=' : signed/unsigned mismatch
+         Logger.cpp
+         MiscTool.cpp
+     1>..\misc\MiscTool.cpp(55): warning C4996: 'mkdir': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _mkdir. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\direct.h(124) : see declaration of 'mkdir'
+     1>..\misc\MiscTool.cpp(87): warning C4018: '<' : signed/unsigned mismatch
+         simplest_librtmp_send264.cpp
+         Sizescale.cpp
+     1>..\misc\Sizescale.cpp(84): warning C4244: '=' : conversion from 'short' to 'char', possible loss of data
+         JRTPSession.cpp
+         _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+     1>D:\HTML5\RenderingServer\RenderingServer\stdafx.h(68): warning C4005: 'ASSERT' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(334) : see previous definition of 'ASSERT'
+     1>D:\HTML5\RenderingServer\RenderingServer\stdafx.h(69): warning C4005: 'VERIFY' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(320) : see previous definition of 'VERIFY'
+         ModuleManager.cpp
+         _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+     1>D:\HTML5\RenderingServer\RenderingServer\stdafx.h(68): warning C4005: 'ASSERT' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(334) : see previous definition of 'ASSERT'
+     1>D:\HTML5\RenderingServer\RenderingServer\stdafx.h(69): warning C4005: 'VERIFY' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(320) : see previous definition of 'VERIFY'
+         RTMPSession.cpp
+         _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+     1>D:\HTML5\RenderingServer\RenderingServer\stdafx.h(68): warning C4005: 'ASSERT' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(334) : see previous definition of 'ASSERT'
+     1>D:\HTML5\RenderingServer\RenderingServer\stdafx.h(69): warning C4005: 'VERIFY' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(320) : see previous definition of 'VERIFY'
+     1>D:\HTML5\RenderingServer\rtmp\rtmp_sys.h(43): warning C4005: 'EWOULDBLOCK' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\errno.h(132) : see previous definition of 'EWOULDBLOCK'
+     1>..\module\RTMPSession.cpp(174): warning C4101: 'len' : unreferenced local variable
+         VideoPullTask.cpp
+     1>..\task\VideoPullTask.cpp : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>d:\html5\renderingserver\task\VideoPullTask.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+     1>D:\HTML5\RenderingServer\RenderingServer\stdafx.h(68): warning C4005: 'ASSERT' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(334) : see previous definition of 'ASSERT'
+     1>D:\HTML5\RenderingServer\RenderingServer\stdafx.h(69): warning C4005: 'VERIFY' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(320) : see previous definition of 'VERIFY'
+     1>d:\html5\renderingserver\task\DataRecvTask.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\HTML5\RenderingServer\rtmp\rtmp_sys.h(43): warning C4005: 'EWOULDBLOCK' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\errno.h(132) : see previous definition of 'EWOULDBLOCK'
+     1>d:\html5\renderingserver\task\DataRecvTask.h(43): warning C4244: 'initializing' : conversion from 'time_t' to 'unsigned long', possible loss of data
+     1>..\task\VideoPullTask.cpp(39): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(234) : see declaration of 'fopen'
+         DataRecvTask.cpp
+     1>..\task\DataRecvTask.cpp : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>d:\html5\renderingserver\task\DataRecvTask.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+     1>D:\HTML5\RenderingServer\RenderingServer\stdafx.h(68): warning C4005: 'ASSERT' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(334) : see previous definition of 'ASSERT'
+     1>D:\HTML5\RenderingServer\RenderingServer\stdafx.h(69): warning C4005: 'VERIFY' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(320) : see previous definition of 'VERIFY'
+     1>D:\HTML5\RenderingServer\rtmp\rtmp_sys.h(43): warning C4005: 'EWOULDBLOCK' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\errno.h(132) : see previous definition of 'EWOULDBLOCK'
+     1>d:\html5\renderingserver\task\DataRecvTask.h(43): warning C4244: 'initializing' : conversion from 'time_t' to 'unsigned long', possible loss of data
+     1>..\task\DataRecvTask.cpp(87): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(234) : see declaration of 'fopen'
+         Generating Code...
+     1>d:\html5\renderingserver\misc\librtmp_send264.cpp(483): warning C4715: 'ReadFirstNaluFromBuf' : not all control paths return a value
+         Compiling...
+         RTMPPushTask.cpp
+         _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+     1>D:\HTML5\RenderingServer\RenderingServer\stdafx.h(68): warning C4005: 'ASSERT' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(334) : see previous definition of 'ASSERT'
+     1>D:\HTML5\RenderingServer\RenderingServer\stdafx.h(69): warning C4005: 'VERIFY' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(320) : see previous definition of 'VERIFY'
+     1>D:\HTML5\RenderingServer\rtmp\rtmp_sys.h(43): warning C4005: 'EWOULDBLOCK' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\errno.h(132) : see previous definition of 'EWOULDBLOCK'
+     1>d:\html5\renderingserver\task\RTMPPushTask.h(39): warning C4244: 'initializing' : conversion from 'time_t' to 'unsigned long', possible loss of data
+         VUASendMediaTask.cpp
+         _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+     1>D:\HTML5\RenderingServer\RenderingServer\stdafx.h(68): warning C4005: 'ASSERT' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(334) : see previous definition of 'ASSERT'
+     1>D:\HTML5\RenderingServer\RenderingServer\stdafx.h(69): warning C4005: 'VERIFY' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(320) : see previous definition of 'VERIFY'
+     1>D:\HTML5\RenderingServer\rtmp\rtmp_sys.h(43): warning C4005: 'EWOULDBLOCK' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\errno.h(132) : see previous definition of 'EWOULDBLOCK'
+     1>d:\html5\renderingserver\task\VUASendMediaTask.h(42): warning C4244: 'initializing' : conversion from 'time_t' to 'unsigned long', possible loss of data
+         BaseThread.cpp
+         _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+     1>D:\HTML5\RenderingServer\RenderingServer\stdafx.h(68): warning C4005: 'ASSERT' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(334) : see previous definition of 'ASSERT'
+     1>D:\HTML5\RenderingServer\RenderingServer\stdafx.h(69): warning C4005: 'VERIFY' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(320) : see previous definition of 'VERIFY'
+         RegisterThread.cpp
+         _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+     1>D:\HTML5\RenderingServer\RenderingServer\stdafx.h(68): warning C4005: 'ASSERT' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(334) : see previous definition of 'ASSERT'
+     1>D:\HTML5\RenderingServer\RenderingServer\stdafx.h(69): warning C4005: 'VERIFY' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(320) : see previous definition of 'VERIFY'
+     1>D:\HTML5\RenderingServer\rtmp\rtmp_sys.h(43): warning C4005: 'EWOULDBLOCK' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\errno.h(132) : see previous definition of 'EWOULDBLOCK'
+         TaskThread.cpp
+         _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+     1>D:\HTML5\RenderingServer\RenderingServer\stdafx.h(68): warning C4005: 'ASSERT' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(334) : see previous definition of 'ASSERT'
+     1>D:\HTML5\RenderingServer\RenderingServer\stdafx.h(69): warning C4005: 'VERIFY' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(320) : see previous definition of 'VERIFY'
+         ScheduleServer.cpp
+         _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+     1>D:\HTML5\RenderingServer\RenderingServer\stdafx.h(68): warning C4005: 'ASSERT' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(334) : see previous definition of 'ASSERT'
+     1>D:\HTML5\RenderingServer\RenderingServer\stdafx.h(69): warning C4005: 'VERIFY' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(320) : see previous definition of 'VERIFY'
+     1>D:\HTML5\RenderingServer\rtmp\rtmp_sys.h(43): warning C4005: 'EWOULDBLOCK' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\errno.h(132) : see previous definition of 'EWOULDBLOCK'
+     1>D:\HTML5\RenderingServer\task\VUASendMediaTask.h(42): warning C4244: 'initializing' : conversion from 'time_t' to 'unsigned long', possible loss of data
+     1>D:\HTML5\RenderingServer\task\RTMPPushTask.h(39): warning C4244: 'initializing' : conversion from 'time_t' to 'unsigned long', possible loss of data
+         UserAgent.cpp
+         _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+     1>D:\HTML5\RenderingServer\RenderingServer\stdafx.h(68): warning C4005: 'ASSERT' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(334) : see previous definition of 'ASSERT'
+     1>D:\HTML5\RenderingServer\RenderingServer\stdafx.h(69): warning C4005: 'VERIFY' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(320) : see previous definition of 'VERIFY'
+     1>D:\HTML5\RenderingServer\rtmp\rtmp_sys.h(43): warning C4005: 'EWOULDBLOCK' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\errno.h(132) : see previous definition of 'EWOULDBLOCK'
+         RecodeSound.cpp
+         _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+     1>d:\html5\renderingserver\renderingserver\stdafx.h(68): warning C4005: 'ASSERT' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(334) : see previous definition of 'ASSERT'
+     1>d:\html5\renderingserver\renderingserver\stdafx.h(69): warning C4005: 'VERIFY' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(320) : see previous definition of 'VERIFY'
+     1>D:\HTML5\RenderingServer\rtmp\rtmp_sys.h(43): warning C4005: 'EWOULDBLOCK' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\errno.h(132) : see previous definition of 'EWOULDBLOCK'
+         RenderingServer.cpp
+         _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+     1>d:\html5\renderingserver\renderingserver\stdafx.h(68): warning C4005: 'ASSERT' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(334) : see previous definition of 'ASSERT'
+     1>d:\html5\renderingserver\renderingserver\stdafx.h(69): warning C4005: 'VERIFY' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(320) : see previous definition of 'VERIFY'
+     1>D:\HTML5\RenderingServer\rtmp\rtmp_sys.h(43): warning C4005: 'EWOULDBLOCK' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\errno.h(132) : see previous definition of 'EWOULDBLOCK'
+         RenderingServerDlg.cpp
+         _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+     1>d:\html5\renderingserver\renderingserver\stdafx.h(68): warning C4005: 'ASSERT' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(334) : see previous definition of 'ASSERT'
+     1>d:\html5\renderingserver\renderingserver\stdafx.h(69): warning C4005: 'VERIFY' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include\afx.h(320) : see previous definition of 'VERIFY'
+     1>D:\HTML5\RenderingServer\rtmp\rtmp_sys.h(43): warning C4005: 'EWOULDBLOCK' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\errno.h(132) : see previous definition of 'EWOULDBLOCK'
+     1>D:\HTML5\RenderingServer\task\RTMPPushTask.h(39): warning C4244: 'initializing' : conversion from 'time_t' to 'unsigned long', possible loss of data
+     1>D:\HTML5\RenderingServer\task\VideoPullTask.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>d:\html5\renderingserver\task\DataRecvTask.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>d:\html5\renderingserver\task\DataRecvTask.h(43): warning C4244: 'initializing' : conversion from 'time_t' to 'unsigned long', possible loss of data
+         Generating Code...
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I.\ /I..\useragent /I..\jrtplib /I..\utility\boost_1_46_1 /I..\utility\tut /I..\utility\H264 /I..\utility\ffmpeg\include /I"..\utility\poco-1.7.6\include" /I..\module /I..\codec /I..\task /I..\thread /I..\misc /I"..\amr-nb" /I..\json /I..\PCMPlayer /I..\sipua /I..\wua /I..\ffmpeg\include /I..\rtmp\include /I..\rtmp /I..\dev\dh /I..\dev\dp /I..\dev /I..\http /I..\dev\hktmcp /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /D WIN32 /D _WINDOWS /D NDEBUG /D OSIP_MT /D _AFXDLL /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TC /analyze- /errorReport:prompt ..\rtmp\amf.c ..\rtmp\hashswf.c ..\rtmp\log.c ..\rtmp\parseurl.c ..\rtmp\rtmp.c
+         amf.c
+     1>c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\errno.h(132): warning C4005: 'EWOULDBLOCK' : macro redefinition
+                 d:\html5\renderingserver\rtmp\rtmp_sys.h(43) : see previous definition of 'EWOULDBLOCK'
+     1>D:\HTML5\RenderingServer\rtmp\include\stdint.h(159): warning C4005: 'SIZE_MAX' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\limits.h(82) : see previous definition of 'SIZE_MAX'
+     1>..\rtmp\amf.c(814): warning C4996: '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(363) : see declaration of '_snprintf'
+     1>..\rtmp\amf.c(826): warning C4996: '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(363) : see declaration of '_snprintf'
+     1>..\rtmp\amf.c(830): warning C4996: '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(363) : see declaration of '_snprintf'
+     1>..\rtmp\amf.c(834): warning C4996: '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(363) : see declaration of '_snprintf'
+     1>..\rtmp\amf.c(838): warning C4996: '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(363) : see declaration of '_snprintf'
+     1>..\rtmp\amf.c(841): warning C4996: '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(363) : see declaration of '_snprintf'
+         hashswf.c
+     1>c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\errno.h(132): warning C4005: 'EWOULDBLOCK' : macro redefinition
+                 d:\html5\renderingserver\rtmp\rtmp_sys.h(43) : see previous definition of 'EWOULDBLOCK'
+     1>D:\HTML5\RenderingServer\rtmp\include\stdint.h(159): warning C4005: 'SIZE_MAX' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\limits.h(82) : see previous definition of 'SIZE_MAX'
+     1>..\rtmp\hashswf.c(98): warning C4996: 'strnicmp': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _strnicmp. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(248) : see declaration of 'strnicmp'
+     1>..\rtmp\hashswf.c(120): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(188) : see declaration of 'strncpy'
+     1>..\rtmp\hashswf.c(145): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(371) : see declaration of 'sprintf'
+     1>..\rtmp\hashswf.c(147): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(371) : see declaration of 'sprintf'
+     1>..\rtmp\hashswf.c(148): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(371) : see declaration of 'sprintf'
+     1>..\rtmp\hashswf.c(242): warning C4996: 'strnicmp': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _strnicmp. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(248) : see declaration of 'strnicmp'
+     1>..\rtmp\hashswf.c(248): warning C4996: 'strnicmp': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _strnicmp. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(248) : see declaration of 'strnicmp'
+     1>..\rtmp\hashswf.c(251): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>..\rtmp\hashswf.c(408): warning C4996: 'strnicmp': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _strnicmp. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(248) : see declaration of 'strnicmp'
+     1>..\rtmp\hashswf.c(422): warning C4996: 'localtime': This function or variable may be unsafe. Consider using localtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\time.inl(112) : see declaration of 'localtime'
+     1>..\rtmp\hashswf.c(443): warning C4996: 'gmtime': This function or variable may be unsafe. Consider using gmtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\time.inl(99) : see declaration of 'gmtime'
+     1>..\rtmp\hashswf.c(446): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(371) : see declaration of 'sprintf'
+     1>..\rtmp\hashswf.c(474): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdlib.h(433) : see declaration of 'getenv'
+     1>..\rtmp\hashswf.c(476): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdlib.h(433) : see declaration of 'getenv'
+     1>..\rtmp\hashswf.c(501): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(371) : see declaration of 'sprintf'
+     1>..\rtmp\hashswf.c(503): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(234) : see declaration of 'fopen'
+     1>..\rtmp\hashswf.c(557): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(188) : see declaration of 'strncpy'
+     1>..\rtmp\hashswf.c(616): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(234) : see declaration of 'fopen'
+     1>..\rtmp\hashswf.c(622): warning C4996: 'strerror': This function or variable may be unsafe. Consider using strerror_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(157) : see declaration of 'strerror'
+         log.c
+     1>c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\errno.h(132): warning C4005: 'EWOULDBLOCK' : macro redefinition
+                 d:\html5\renderingserver\rtmp\rtmp_sys.h(43) : see previous definition of 'EWOULDBLOCK'
+     1>D:\HTML5\RenderingServer\rtmp\include\stdint.h(159): warning C4005: 'SIZE_MAX' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\limits.h(82) : see previous definition of 'SIZE_MAX'
+     1>..\rtmp\log.c(52): warning C4996: 'vsnprintf': This function or variable may be unsafe. Consider using vsnprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(354) : see declaration of 'vsnprintf'
+     1>..\rtmp\log.c(188): warning C4996: 'vsnprintf': This function or variable may be unsafe. Consider using vsnprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(354) : see declaration of 'vsnprintf'
+     1>..\rtmp\log.c(213): warning C4996: 'vsnprintf': This function or variable may be unsafe. Consider using vsnprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(354) : see declaration of 'vsnprintf'
+         parseurl.c
+     1>c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\errno.h(132): warning C4005: 'EWOULDBLOCK' : macro redefinition
+                 d:\html5\renderingserver\rtmp\rtmp_sys.h(43) : see previous definition of 'EWOULDBLOCK'
+     1>D:\HTML5\RenderingServer\rtmp\include\stdint.h(159): warning C4005: 'SIZE_MAX' : macro redefinition
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\limits.h(82) : see previous definition of 'SIZE_MAX'
+     1>..\rtmp\parseurl.c(58): warning C4996: 'strnicmp': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _strnicmp. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(248) : see declaration of 'strnicmp'
+     1>..\rtmp\parseurl.c(60): warning C4996: 'strnicmp': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _strnicmp. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(248) : see declaration of 'strnicmp'
+     1>..\rtmp\parseurl.c(62): warning C4996: 'strnicmp': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _strnicmp. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(248) : see declaration of 'strnicmp'
+     1>..\rtmp\parseurl.c(64): warning C4996: 'strnicmp': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _strnicmp. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(248) : see declaration of 'strnicmp'
+     1>..\rtmp\parseurl.c(66): warning C4996: 'strnicmp': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _strnicmp. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(248) : see declaration of 'strnicmp'
+     1>..\rtmp\parseurl.c(68): warning C4996: 'strnicmp': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _strnicmp. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(248) : see declaration of 'strnicmp'
+     1>..\rtmp\parseurl.c(70): warning C4996: 'strnicmp': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _strnicmp. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(248) : see declaration of 'strnicmp'
+     1>..\rtmp\parseurl.c(249): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>..\rtmp\parseurl.c(256): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>..\rtmp\parseurl.c(272): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(325) : see declaration of 'sscanf'
+         rtmp.c
+     1>c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\errno.h(132): warning C4005: 'EWOULDBLOCK' : macro redefinition
+                 d:\html5\renderingserver\rtmp\rtmp_sys.h(43) : see previous definition of 'EWOULDBLOCK'
+     1>..\rtmp\rtmp.c(386): warning C4996: 'strdup': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _strdup. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(238) : see declaration of 'strdup'
+     1>..\rtmp\rtmp.c(623): warning C4996: 'stricmp': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _stricmp. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(246) : see declaration of 'stricmp'
+     1>..\rtmp\rtmp.c(639): warning C4996: 'stricmp': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _stricmp. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(246) : see declaration of 'stricmp'
+     1>..\rtmp\rtmp.c(706): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(325) : see declaration of 'sscanf'
+     1>..\rtmp\rtmp.c(742): warning C4996: '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(363) : see declaration of '_snprintf'
+     1>..\rtmp\rtmp.c(821): warning C4996: 'strerror': This function or variable may be unsafe. Consider using strerror_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(157) : see declaration of 'strerror'
+     1>..\rtmp\rtmp.c(2606): warning C4996: '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(363) : see declaration of '_snprintf'
+     1>..\rtmp\rtmp.c(2610): warning C4996: '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(363) : see declaration of '_snprintf'
+     1>..\rtmp\rtmp.c(2614): warning C4996: '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(363) : see declaration of '_snprintf'
+     1>..\rtmp\rtmp.c(2617): warning C4996: '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(363) : see declaration of '_snprintf'
+     1>..\rtmp\rtmp.c(2621): warning C4996: '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(363) : see declaration of '_snprintf'
+     1>..\rtmp\rtmp.c(3540): warning C4996: 'strerror': This function or variable may be unsafe. Consider using strerror_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(157) : see declaration of 'strerror'
+     1>..\rtmp\rtmp.c(3684): warning C4996: '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(363) : see declaration of '_snprintf'
+     1>..\rtmp\rtmp.c(4202): warning C4018: '>' : signed/unsigned mismatch
+         Generating Code...
+       ResourceCompile:
+         c:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\rc.exe /D NDEBUG /D _AFXDLL /l"0x0409" /IRelease\ /nologo /fo"Release\RenderingServer.res" RenderingServer.rc 
+       Link:
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\HTML5\RenderingServer\Release\RenderingServer.exe" /INCREMENTAL:NO /NOLOGO /MANIFEST /ManifestFile:"Release\RenderingServer.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\HTML5\RenderingServer\Release\RenderingServer.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\HTML5\RenderingServer\Release\RenderingServer.lib" /MACHINE:X86 Release\RenderingServer.res
+         Release\WUACodec.obj
+         Release\HttpService.obj
+         Release\jsontest.obj
+         Release\json_reader.obj
+         Release\json_value.obj
+         Release\json_writer.obj
+         Release\main_jsontest.obj
+         Release\main_jsontestrunner.obj
+         Release\CommandContextParse.obj
+         Release\ConfigBox.obj
+         Release\librtmp_send264.obj
+         Release\Logger.obj
+         Release\MiscTool.obj
+         Release\simplest_librtmp_send264.obj
+         Release\Sizescale.obj
+         Release\JRTPSession.obj
+         Release\ModuleManager.obj
+         Release\RTMPSession.obj
+         Release\amf.obj
+         Release\hashswf.obj
+         Release\log.obj
+         Release\parseurl.obj
+         Release\rtmp.obj
+         Release\VideoPullTask.obj
+         Release\DataRecvTask.obj
+         Release\RTMPPushTask.obj
+         Release\VUASendMediaTask.obj
+         Release\BaseThread.obj
+         Release\RegisterThread.obj
+         Release\TaskThread.obj
+         Release\ScheduleServer.obj
+         Release\UserAgent.obj
+         Release\RecodeSound.obj
+         Release\stdafx.obj
+         Release\RenderingServer.obj
+         Release\RenderingServerDlg.obj
+         RenderingServer.vcxproj -> D:\HTML5\RenderingServer\Release\RenderingServer.exe
+       Manifest:
+         c:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"D:\HTML5\RenderingServer\Release\RenderingServer.exe;#1" /manifest Release\RenderingServer.exe.intermediate.manifest "c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\Include\Manifest\dpiaware.manifest"
+       PostBuildEvent:
+         copy D:\HTML5\RenderingServer\Release\RenderingServer.exe ..\bin\RenderingServer.exe
+         :VCEnd
+         已复制         1 个文件。
+       FinalizeBuildStatus:
+         Deleting file "Release\RenderingServer.unsuccessfulbuild".
+         Touching "Release\RenderingServer.lastbuildstate".
+     1>Done Building Project "D:\HTML5\RenderingServer\RenderingServer\RenderingServer.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:52.81

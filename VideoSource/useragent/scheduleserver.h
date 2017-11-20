@@ -347,6 +347,65 @@ namespace ScheduleServer
 		void shutdown_cast(unsigned long id);
 		void update_expire(unsigned long id, unsigned long expire);
 
+	public:
+		SS_Error add_video_pull_task(unsigned long id, string file);
+		SS_Error add_capture_screen_task(unsigned long id, string window_caption);
+		SS_Error remove_capture_screen_task();
+
+	private:
+		CEdit* _status_edit;
+		string _status;
+		CSSMutex _status_mutex;
+
+	public:
+		void show_request(string from, string method, string req)
+		{
+			CSSLocker lock(&_status_mutex);
+
+			string log = "";
+			log += "REQUEST: " + MiscTools::parse_now_to_string() + "\r\n";
+			log += "FROM: " + from + "\r\n";
+			log += "METHOD: " + method + "\r\n";
+			log += req + "\r\n\r\n";
+
+			if(100 < _status_edit->GetLineCount()) _status = "";
+
+			_status = log + _status;
+			_status_edit->SetWindowText(_status.c_str());
+		}
+
+		void show_response(string res)
+		{
+			CSSLocker lock(&_status_mutex);
+
+			string log = "";
+			log += "RESPONSE: " + MiscTools::parse_now_to_string() + "\r\n";
+			log += res + "\r\n\r\n";
+
+			_status = log + _status;
+			_status_edit->SetWindowText(_status.c_str());
+		}
+
+		void show_log(string content)
+		{
+			CSSLocker lock(&_status_mutex);
+
+			string log = "";
+			log += MiscTools::parse_now_to_string() + "\r\n";
+			log += content + "\r\n\r\n";
+
+			if(100 < _status_edit->GetLineCount()) _status = "";
+
+			_status = log + _status;
+			_status_edit->SetWindowText(_status.c_str());
+		}
+
+		void on_mouse_action(string action, string arg);
+
+	private:
+		CTask* rtmp_push_task;
+		CTask* sdk_recv_task;
+
 	};
 }
 

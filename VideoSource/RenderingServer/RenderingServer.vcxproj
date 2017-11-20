@@ -152,6 +152,7 @@
     <ClInclude Include="..\misc\MiscTool.h" />
     <ClInclude Include="..\misc\Sizescale.h" />
     <ClInclude Include="..\misc\TimeConsuming.h" />
+    <ClInclude Include="..\misc\Transcoding.h" />
     <ClInclude Include="..\module\IModule.h" />
     <ClInclude Include="..\module\JRTPSession.h" />
     <ClInclude Include="..\module\ModuleManager.h" />
@@ -166,6 +167,7 @@
     <ClInclude Include="..\rtmp\rtmp.h" />
     <ClInclude Include="..\rtmp\rtmp_sys.h" />
     <ClInclude Include="..\rtmp\sps_decode.h" />
+    <ClInclude Include="..\task\CaptureScreenTask.h" />
     <ClInclude Include="..\task\VideoPullTask.h" />
     <ClInclude Include="..\task\DataRecvTask.h" />
     <ClInclude Include="..\task\RTMPPushTask.h" />
@@ -202,6 +204,7 @@
     <ClCompile Include="..\misc\MiscTool.cpp" />
     <ClCompile Include="..\misc\simplest_librtmp_send264.cpp" />
     <ClCompile Include="..\misc\Sizescale.cpp" />
+    <ClCompile Include="..\misc\Transcoding.cpp" />
     <ClCompile Include="..\module\JRTPSession.cpp" />
     <ClCompile Include="..\module\ModuleManager.cpp" />
     <ClCompile Include="..\module\RTMPSession.cpp" />
@@ -210,6 +213,7 @@
     <ClCompile Include="..\rtmp\log.c" />
     <ClCompile Include="..\rtmp\parseurl.c" />
     <ClCompile Include="..\rtmp\rtmp.c" />
+    <ClCompile Include="..\task\CaptureScreenTask.cpp" />
     <ClCompile Include="..\task\VideoPullTask.cpp" />
     <ClCompile Include="..\task\DataRecvTask.cpp" />
     <ClCompile Include="..\task\RTMPPushTask.cpp" />

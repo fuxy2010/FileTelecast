@@ -34,6 +34,7 @@ namespace ScheduleServer
 		unsigned long	ua_id;
 		unsigned long	create_timestamp;//创建该任务的时戳
 		string			rtmp_url;
+		string			window_caption;
 
 		tagRTMP_PUSH_TASK_INFO() : task_id(0), ua_id(0), create_timestamp(::time(NULL))
 		{

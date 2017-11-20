@@ -41,23 +41,13 @@ static CCitmsErrorHandler * sErrorHandler = new CCitmsErrorHandler;
 class CCitmsHttpRequestHandler : public Poco::Net::AbstractHTTPRequestHandler
 {
 public:
-	CCitmsHttpRequestHandler() :
-	_status_edit(NULL)
+	CCitmsHttpRequestHandler()
 	{
-		_status_edit = (CEdit*)(AfxGetApp()->GetMainWnd()->GetDlgItem(IDC_EDIT_HTTP_SERVICE));//->SetWindowText(decodedURI.c_str());
 	}
 	virtual ~CCitmsHttpRequestHandler() {}
 
 private:
-	CEdit* _status_edit;
-	static string _status;
-	static CSSMutex _status_mutex;
-
-	static CSSMutex _livecast_mutex;
-	static CSSMutex _vod_mutex;
-
-	//static map<unsigned long, CTask*> _pull_task_map;
-	//static map<unsigned long, CTask*> _push_task_map;
+	static CSSMutex _http_mutex;
 
 private:
 	string return_response(int ErrCode, string ErrorDesc, string Data, unsigned long delayms = 0)
@@ -74,318 +64,67 @@ private:
 		return fast_writer.write(json_value);
 	}
 
-#if 0
-#else
-	string on_livecast_start(string uri)
+	string on_action(string url)
 	{
-		CSSLocker lock(&_livecast_mutex);
-		return "";
-	}
+		CSSLocker lock(&_http_mutex);
+		//http://127.0.0.1:8080/action.html?id=123&action=left&arg=xxx
 
-	string on_livecast_stop(string uri)
-	{
-		CSSLocker lock(&_livecast_mutex);
-		//http://127.0.0.1:80/api/stoprealplay?streamno=[StreamNo]
+		{
+			Poco::URI uri(url);
 
-		size_t pos = uri.find("streamno=") + 9;
-		string streamno = uri.substr(pos, uri.length() - pos);
+			/*std::string userInfo = uri.getUserInfo();
+			//_username = userInfo.substr(0, userInfo.find(':'));
 
-		TRACE("\n<LIVE STOP %s", streamno.c_str());
+			if (userInfo.length() > _username.length())
+			{
+				_password = userInfo.substr(_username.length() + 1);
+			}
 
-		unsigned long stream_no = MiscTools::parse_string_to_type<unsigned long>(streamno);
+			_ip = uri.getHost();
+			_port = MiscTools::parse_string_to_type<unsigned short>(Poco::NumberFormatter::format(uri.getPort()));*/
 
-		if(!stream_no)
+			unsigned long id = 0;
+			string action = "";
+			string arg = "";
+
+			auto paramsVector = uri.getQueryParameters();
+			for (auto i = 0; i < paramsVector.size(); ++i)
+			{
+				std::string key = Poco::toLower(paramsVector[i].first);
+				std::string val = paramsVector[i].second;
+
+				if ("id" == key)
+					id = MiscTools::parse_string_to_type<unsigned long>(val);
+				else if ("action" == key)
+					action  = val;
+				else if ("arg" == key)
+					arg = val;
+
+				
+
+				TRACE("\nKV: %s, %s", key.c_str(), val.c_str());
+			}
+
+			SINGLETON(CScheduleServer).on_mouse_action(action, arg);
+
+			/*if(SINGLETON(CScheduleServer)._pull_task_map.end() != SINGLETON(CScheduleServer)._pull_task_map.find(id))
+			{
+				CVideoPullTask* task = dynamic_cast<CVideoPullTask*>(SINGLETON(CScheduleServer)._pull_task_map[id]);
+			
+				if(NULL != task) task->up();
+			}*/
+		}
+
+		if(false)
 		{
 			return return_response(1002, "Invalid request.", "");
 		}
 
-		if(true == SINGLETON(CScheduleServer).query_livecast_request(streamno).url.empty())
-		{
-			return return_response(1002, "Invalid StreamNo.", "");
-		}
-
-		SINGLETON(CScheduleServer).shutdown_cast(stream_no);
-
 		Json::Value json_value;
-		json_value["StreamStatus"] = Json::Value("CLOSED");
+		json_value["Action"] = Json::Value("Done");
 
 		Json::FastWriter fast_writer;
-		return return_response(0, "success", fast_writer.write(json_value));//return fast_writer.write(json_value);
-	}
-#endif
-	string on_vod_start(string uri)
-	{
-		CSSLocker lock(&_vod_mutex);
-		return "";
-	}
-
-	string on_vod_stop(string uri)
-	{
-		CSSLocker lock(&_vod_mutex);
-		//http://127.0.0.1:80/api/stopvodplay?streamno=[StreamNo]
-
-		size_t pos = uri.find("streamno=") + 9;
-		string streamno = uri.substr(pos, uri.length() - pos);
-
-		TRACE("\n<VOD STOP %s", streamno.c_str());
-
-		unsigned long stream_no = MiscTools::parse_string_to_type<unsigned long>(streamno);
-
-		if(!stream_no)
-		{
-			return return_response(1002, "Invalid request.", "");
-		}
-
-		SINGLETON(CScheduleServer).shutdown_cast(stream_no);
-
-		Json::Value json_value;
-		json_value["StreamStatus"] = Json::Value("CLOSED");
-
-		Json::FastWriter fast_writer;
-		return return_response(0, "success", fast_writer.write(json_value));//return fast_writer.write(json_value);
-	}
-
-	string on_vod_seek(string uri)
-	{
-		/*CSSLocker lock(&_vod_mutex);
-		//http://127.0.0.1:80/api/seekvodplay?streamno=[StreamNo]&seektime=[SeekTime]
-		//rtsp://192.168.0.190:9320/dss/playback/pu?cameraid=1000004%247%26begintime=1482474300%26endtime=1482474397%26substream=1
-		//dsssdk://fym/88888888@192.168.0.190:9000/params?cameraid=1000004&channel=0&begintime=1486569600&endtime=1486655999
-
-		string streamno = uri.substr(uri.find("streamno=") + 9, uri.find("&seektime") - uri.find("streamno=") - 9);
-		string seektime = uri.substr(uri.find("seektime=") + 9, uri.length() - uri.find("seektime=") - 9);
-
-		string former_url = SINGLETON(CScheduleServer).query_vod_request(streamno).url;
-		if(true == former_url.empty())
-		{
-			return return_response(1001, "Invalid StreamNo.", "");
-		}
-
-		if(string::npos != former_url.find("rtsp"))
-		{
-			//rtsp://192.168.0.190:9320/dss/playback/pu?cameraid=1000004%247%26begintime=1482474300%26endtime=1482474397%26substream=1
-
-			unsigned long begintime = MiscTools::parse_string_to_type<unsigned long>(former_url.substr(former_url.find("begintime=") + 10, 10));//former_url.length() - former_url.find("begintime=") - 10 - former_url.find("%26endtime")));
-			unsigned long endtime = MiscTools::parse_string_to_type<unsigned long>(former_url.substr(former_url.find("endtime=") + 8, 10));//former_url.length() - former_url.find("endtime=") - 8 - former_url.find("%26substream")));
-			unsigned long offset = MiscTools::parse_string_to_type<unsigned long>(seektime);
-			begintime += offset;
-
-			if(endtime <= begintime)
-			{
-				return return_response(1001, "Invalid SeekTime.", "");
-			}
-
-			string new_url = former_url.substr(0, former_url.find("begintime=") + 10);
-			new_url += MiscTools::parse_type_to_string<unsigned long>(begintime);
-			//new_url += former_url.substr(former_url.find("%26endtime="), former_url.length() - former_url.find("%26endtime="));
-			new_url += former_url.substr(former_url.find("begintime=") + 10 + 10, former_url.length() - former_url.find("begintime=") - 10 - 10);
-
-			CRTSPRecvTask* rtsp_task = dynamic_cast<CRTSPRecvTask*>(SINGLETON(CScheduleServer)._pull_task_map[MiscTools::parse_string_to_type<unsigned long>(streamno)]);
-			if(NULL != rtsp_task)
-			{
-				rtsp_task->pause();
-				rtsp_task->restart(new_url);
-			}
-
-			Json::Value json_value;
-			json_value["StreamStatus"] = Json::Value("PUSHING");
-			json_value["StreamNo"] = Json::Value(streamno);
-
-			Json::FastWriter fast_writer;
-			return return_response(0, "success", fast_writer.write(json_value));//return fast_writer.write(json_value);
-		}
-		else if(string::npos != former_url.find("dsssdk"))
-		{
-			//dsssdk://fym/88888888@192.168.0.190:9000/params?cameraid=1000004&channel=0&begintime=1486569600&endtime=1486655999
-
-			unsigned long begintime = MiscTools::parse_string_to_type<unsigned long>(former_url.substr(former_url.find("begintime=") + 10, 10));//former_url.length() - former_url.find("begintime=") - 10 - former_url.find("%26endtime")));
-			unsigned long endtime = MiscTools::parse_string_to_type<unsigned long>(former_url.substr(former_url.find("endtime=") + 8, 10));//former_url.length() - former_url.find("endtime=") - 8 - former_url.find("%26substream")));
-			unsigned long offset = MiscTools::parse_string_to_type<unsigned long>(seektime);
-			begintime += offset;
-
-			if(endtime <= begintime)
-			{
-				return return_response(1001, "Invalid SeekTime.", "");
-			}
-
-			string new_url = former_url.substr(0, former_url.find("begintime=") + 10);
-			new_url += MiscTools::parse_type_to_string<unsigned long>(begintime);
-			//new_url += former_url.substr(former_url.find("&endtime="), former_url.length() - former_url.find("&endtime="));
-			new_url += former_url.substr(former_url.find("begintime=") + 10 + 10, former_url.length() - former_url.find("begintime=") - 10 - 10);
-
-			CDPSDKVodPullTask* task = dynamic_cast<CDPSDKVodPullTask*>(SINGLETON(CScheduleServer)._pull_task_map[MiscTools::parse_string_to_type<unsigned long>(streamno)]);
-			if(NULL != task)
-			{
-				task->pause();
-				task->restart(new_url);
-			}
-
-			Json::Value json_value;
-			json_value["StreamStatus"] = Json::Value("PUSHING");
-			json_value["StreamNo"] = Json::Value(streamno);
-
-			Json::FastWriter fast_writer;
-			return return_response(0, "success", fast_writer.write(json_value));//return fast_writer.write(json_value);
-		}*/
-
-		return return_response(1001, "Invalid Request URL.", "");
-	}
-
-	//////////////////////////////////////////////////////////////////////////
-	string on_livecast_start_sdk(string uri)
-	{
-		/*CSSLocker lock(&_livecast_mutex);
-		//http://127.0.0.1:80/api/startrealplay?connectstring=dsssdk://fym/88888888@192.168.0.190:9000/params?cameraid=1000004&channel=0
-		//dsssdk://fym/88888888@192.168.0.190:9000/params?cameraid=1000004&channel=0
-
-		//http://127.0.0.1:80/api/startrealplay?connectstring=cmssdk://fym/88888888@192.168.0.190:9000/params?cameraid=1000004
-		//cmssdk://fym/88888888@192.168.0.190:9000/params?cameraid=1000004
-
-		size_t pos = uri.find("connectstring=") + 14;
-		string url = uri.substr(pos, uri.length() - pos);
-
-		TRACE("\n<LIVE SDK START %s", url.c_str());
-
-		if(1024 < url.length())
-		{
-			return return_response(1004, "Too long request url.", "");
-		}
-
-		if(NULL == strstr(url.c_str(), "dsssdk")
-			&& NULL == strstr(url.c_str(), "DSSSDK")
-			&& NULL == strstr(url.c_str(), "cmssdk")
-			&& NULL == strstr(url.c_str(), "CMSSDK"))
-			return return_response(1004, "No SDK url.", "");
-
-		LiveCastRequest req;
-		req.url = url;
-
-		LiveCastResponse res = SINGLETON(CScheduleServer).query_livecast_response(req);
-
-		if(false == res.num.empty())
-		{
-			Json::Value json_value;
-			json_value["StreamNo"] = Json::Value(res.num);
-			json_value["StreamUrl"] = Json::Value(res.url);
-			json_value["ExpireTime"] = Json::Value(res.expire);
-
-			Json::FastWriter fast_writer;
-			return return_response(0, "success", fast_writer.write(json_value));//return fast_writer.write(json_value);
-		}
-		else
-		{
-			unsigned long id = timeGetTime() & 0xffffff;
-			string hls_url = "";
-			string rtmp_url = "";
-			CRTMPPushTask* rtmp_push_task = NULL;
-			CDataRecvTask* sdk_recv_task = NULL;//CDPSDKLivePullTask* sdk_recv_task = NULL;
-
-			//RTMP
-			{
-				RTMP_PUSH_TASK_INFO task_info;
-
-				task_info.task_id = id;
-				task_info.ua_id = id;
-
-				task_info.rtmp_url = "rtmp://";
-				task_info.rtmp_url += SINGLETON(CConfigBox).get_property("HLSServer", "localhost");
-				task_info.rtmp_url += ":" + SINGLETON(CConfigBox).get_property("RTMPServerPort", "1935");
-				task_info.rtmp_url += "/hls/";
-				task_info.rtmp_url += MiscTools::parse_type_to_string<unsigned long>(task_info.ua_id);
-				//task_info.rtmp_url = "rtmp://121.41.15.6/hls/123";
-				//task_info.rtmp_url = "rtmp://192.168.0.123/hls/123";
-
-				//����ģ��UA��������Ƶ����
-				rtmp_push_task = new CRTMPPushTask(task_info);
-
-				if(false == rtmp_push_task->is_initialized())
-				{
-					return return_response(2001, "Failed in rtmp push.", "");
-				}
-
-				if(SS_NoErr != SINGLETON(CScheduleServer).add_task(rtmp_push_task, task_info.task_id))
-				{
-					delete rtmp_push_task;
-					rtmp_push_task = NULL;
-
-					return return_response(3001, "Failed in rtmp push 2.", "");
-				}
-			}
-
-			//SDK
-			{
-				SDK_RECV_TASK_INFO task_info;
-
-				task_info.task_id = id + 1;
-				task_info.ua_id = id;
-
-				task_info.data_url = req.url;
-
-				//����ģ��UA��������Ƶ����
-				//sdk_recv_task = new CDPSDKLivePullTask(task_info);
-				if(NULL != strstr(url.c_str(), "dsssdk") || NULL != strstr(url.c_str(), "DSSSDK"))
-					sdk_recv_task = new CDPSDKLivePullTask(task_info);
-				else if(NULL != strstr(url.c_str(), "cmssdk") || NULL != strstr(url.c_str(), "CMSSDK"))
-					sdk_recv_task = new CVideoPullTask(task_info);
-
-				if(false == sdk_recv_task->is_initialized())
-				{
-					rtmp_push_task->shutdown();
-					return return_response(2001, "Failed in creating sdk session.", "");
-				}
-
-				if(SS_NoErr != SINGLETON(CScheduleServer).add_task(sdk_recv_task, task_info.task_id))
-				{
-					delete sdk_recv_task;
-					sdk_recv_task = NULL;
-
-					rtmp_push_task->shutdown();
-
-					return return_response(3001, "Failed in creating rtsp session 2.", "");
-				}
-
-				hls_url = "http://";
-				hls_url += SINGLETON(CConfigBox).get_property("HLSServer", "localhost");
-				hls_url += ":";
-				hls_url += SINGLETON(CConfigBox).get_property("HLSServerPort", "8080");
-				hls_url += "/hls/";
-				hls_url += MiscTools::parse_type_to_string<unsigned long>(id);
-				hls_url += ".m3u8";
-
-				rtmp_url = "rtmp://";
-				rtmp_url += SINGLETON(CConfigBox).get_property("HLSServer", "localhost");
-				rtmp_url += ":";
-				rtmp_url += SINGLETON(CConfigBox).get_property("RTMPServerPort", "1935");
-				rtmp_url += "/hls/";
-				rtmp_url += MiscTools::parse_type_to_string<unsigned long>(id);
-			}
-
-			//success////////////////////////////////////////////////////////////////////////
-			SINGLETON(CScheduleServer)._push_task_map[id] = rtmp_push_task;
-			SINGLETON(CScheduleServer)._pull_task_map[id] = sdk_recv_task;
-
-			res.num = MiscTools::parse_type_to_string<unsigned long>(id);
-			res.url = hls_url;
-			res.url2 = rtmp_url;
-			res.expire = "300";
-			SINGLETON(CScheduleServer).insert_livecast_map(req, res);
-
-			Json::Value json_value;
-			json_value["StreamNo"] = Json::Value(MiscTools::parse_type_to_string<unsigned long>(id));
-			json_value["StreamUrl"] = Json::Value(hls_url);
-			json_value["StreamUrl2"] = Json::Value(rtmp_url);
-			json_value["ExpireTime"] = Json::Value("300");
-
-			Json::FastWriter fast_writer;
-			return return_response(0, "success", fast_writer.write(json_value), 6000);//return fast_writer.write(json_value);
-		}*/
-		
-		return "";
-	}
-
-	string on_vod_start_sdk(string uri)
-	{
-		return "";
+		return return_response(0, "success", fast_writer.write(json_value));
 	}
 
 protected:
@@ -394,7 +133,7 @@ protected:
 		string uri = "";
 		Poco::URI::decode(request().getURI(), uri, false);
 
-		show_request(request().clientAddress().toString(),request().getMethod(), uri);
+		SINGLETON(CScheduleServer).show_request(request().clientAddress().toString(),request().getMethod(), uri);
 
 		if(request().getMethod() != Poco::Net::HTTPServerRequest::HTTP_GET)
 		{
@@ -403,8 +142,10 @@ protected:
 		}
 		
 		string res = "";
+
+		res = on_action(uri);
 		
-		if(string::npos != uri.find("startrealplay"))
+		/*if(string::npos != uri.find("startrealplay"))
 		{
 			if(string::npos != uri.find("rtsp://"))
 				res = on_livecast_start(uri);
@@ -437,56 +178,23 @@ protected:
 		else
 		{
 			res = return_response(1001, "Invalid request.", "");
-		}
+		}*/
 
 		response().setStatusAndReason(Poco::Net::HTTPResponse::HTTP_OK);
 		//Access-Control-Allow-Origin
 		response().setAccessControl();
 		response().setContentType("text/plain");		
 
-		show_response(res.data());
+		SINGLETON(CScheduleServer).show_response(res.data());
 
 		response().sendBuffer(res.data(), res.size());
 	}
-
-private:
-	void show_request(string from, string method, string req)
-	{
-		CSSLocker lock(&_status_mutex);
-
-		string log = "";
-		log += "REQUEST: " + MiscTools::parse_now_to_string() + "\r\n";
-		log += "FROM: " + from + "\r\n";
-		log += "METHOD: " + method + "\r\n";
-		log += req + "\r\n\r\n";
-
-		if(100 < _status_edit->GetLineCount()) _status = "";
-
-		_status = log + _status;
-		_status_edit->SetWindowText(_status.c_str());
-	}
-
-	void show_response(string res)
-	{
-		CSSLocker lock(&_status_mutex);
-
-		string log = "";
-		log += "RESPONSE: " + MiscTools::parse_now_to_string() + "\r\n";
-		log += res + "\r\n\r\n";
-
-		_status = log + _status;
-		_status_edit->SetWindowText(_status.c_str());
-	}
 };
 
-CSSMutex CCitmsHttpRequestHandler::_livecast_mutex;
-CSSMutex CCitmsHttpRequestHandler::_vod_mutex;
+CSSMutex CCitmsHttpRequestHandler::_http_mutex;
 
 //map<unsigned long, CTask*> CCitmsHttpRequestHandler::_pull_task_map;
 //map<unsigned long, CTask*> CCitmsHttpRequestHandler::_push_task_map;
-
-string CCitmsHttpRequestHandler::_status = "";
-CSSMutex CCitmsHttpRequestHandler::_status_mutex;
 
 class _CCitms_RequestHandlerFactory : public Poco::Net::HTTPRequestHandlerFactory
 {

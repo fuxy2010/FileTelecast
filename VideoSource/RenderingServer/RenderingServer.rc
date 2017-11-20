@@ -21,6 +21,7 @@
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
 LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -78,6 +79,7 @@ IDR_MAINFRAME           ICON                    "res\\RenderingServer.ico"
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -98,14 +100,12 @@ END
 IDD_RenderingServer_DIALOG DIALOGEX 0, 0, 411, 369
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
-CAPTION "媒体网关"
+CAPTION "??????"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    PUSHBUTTON      "RTMP Start",IDC_BUTTON_RTMP_START,57,350,69,16
+    PUSHBUTTON      "Start",IDC_BUTTON_RTMP_START,57,350,69,16
     GROUPBOX        "RenderingServer",IDC_STATIC,6,3,390,316,BS_CENTER
-    PUSHBUTTON      "RTMP Stop",IDC_BUTTON_RTMP_STOP,143,350,69,16
-    PUSHBUTTON      "SDK Test",IDC_BUTTON_DH,229,351,50,15
-    PUSHBUTTON      "RTSP Test",IDC_BUTTON_H264,311,350,50,16
+    PUSHBUTTON      "Stop",IDC_BUTTON_RTMP_STOP,234,350,69,16
     EDITTEXT        IDC_EDIT_HTTP_SERVICE,12,21,368,291,ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY | ES_WANTRETURN | WS_VSCROLL
 END
 
@@ -208,4 +208,3 @@ LANGUAGE 9, 1
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
 
-RenderingServer

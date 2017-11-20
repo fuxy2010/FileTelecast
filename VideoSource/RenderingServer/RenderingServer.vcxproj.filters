@@ -228,6 +228,12 @@
     <ClInclude Include="..\task\VideoPullTask.h">
       <Filter>task</Filter>
     </ClInclude>
+    <ClInclude Include="..\task\CaptureScreenTask.h">
+      <Filter>task</Filter>
+    </ClInclude>
+    <ClInclude Include="..\misc\Transcoding.h">
+      <Filter>misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RenderingServer.cpp">
@@ -337,6 +343,12 @@
     </ClCompile>
     <ClCompile Include="..\task\VideoPullTask.cpp">
       <Filter>task</Filter>
+    </ClCompile>
+    <ClCompile Include="..\task\CaptureScreenTask.cpp">
+      <Filter>task</Filter>
+    </ClCompile>
+    <ClCompile Include="..\misc\Transcoding.cpp">
+      <Filter>misc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

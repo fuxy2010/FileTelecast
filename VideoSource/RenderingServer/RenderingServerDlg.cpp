@@ -231,140 +231,115 @@ void CRenderingServerDlg::OnClose()  //�������������Ͻ
 	CDialogEx::OnClose();
 }
 
-#include "RTMPPushTask.h"
-#include "VideoPullTask.h"
 void CRenderingServerDlg::OnBnClickedButtonRTMPStart()  //����(�����豸)
 {
-	//SINGLETON(CScheduleServer).start_rtmp_push(123);
-
-	//m_rtmp_start_btn.EnableWindow(FALSE);
-	//m_rtmp_stop_btn.EnableWindow(TRUE);
-
-	LiveCastRequest req;
-	//req.url = url;
-
-	LiveCastResponse res = SINGLETON(CScheduleServer).query_livecast_response(req);
-
-	/*if(false == res.num.empty())
+	if(false)
 	{
-		//Json::Value json_value;
-		json_value["StreamNo"] = Json::Value(res.num);
-		json_value["StreamUrl"] = Json::Value(res.url);
-		json_value["ExpireTime"] = Json::Value(res.expire);
-
-		Json::FastWriter fast_writer;
-		return return_response(0, "success", fast_writer.write(json_value));//return fast_writer.write(json_value);
+		SINGLETON(CScheduleServer).add_video_pull_task(111, "720p.yuv");
+		return;
 	}
-	else*/
+
+	//遍历当前窗口
+	string caption = SINGLETON(CConfigBox).get_property("Window", "");
+
+	if(false == caption.empty())
 	{
-		unsigned long id = 123;//timeGetTime() & 0xffffff;
-		//string hls_url = "";
-		//string rtmp_url = "";
-		CRTMPPushTask* rtmp_push_task = NULL;
-		CDataRecvTask* sdk_recv_task = NULL;//CDPSDKLivePullTask* sdk_recv_task = NULL;
+		CWnd* pDesktopWnd = CWnd::GetDesktopWindow();
 
-		//RTMP
+		//2.获得一个子窗口
+		CWnd* pWnd = pDesktopWnd->GetWindow(GW_CHILD);
+		//3.循环取得桌面下的所有子窗口
+		while(pWnd != NULL)
 		{
-			RTMP_PUSH_TASK_INFO task_info;
+			//获得窗口类名
+			CString strClassName = _T("");
+			::GetClassName(pWnd->GetSafeHwnd(),strClassName.GetBuffer(256),256);
 
-			task_info.task_id = id;
-			task_info.ua_id = id;
+			//获得窗口标题
+			CString strWindowText = _T("");
+			::GetWindowText(pWnd->GetSafeHwnd(),strWindowText.GetBuffer(256),256);
 
-			task_info.rtmp_url = "rtmp://";
-			task_info.rtmp_url += SINGLETON(CConfigBox).get_property("HLSServer", "localhost");
-			task_info.rtmp_url += ":" + SINGLETON(CConfigBox).get_property("RTMPServerPort", "1935");
-			task_info.rtmp_url += "/hls/";
-			task_info.rtmp_url += MiscTools::parse_type_to_string<unsigned long>(task_info.ua_id);
-			
-			rtmp_push_task = new CRTMPPushTask(task_info);
-
-			if(false == rtmp_push_task->is_initialized())
+			//AfxMessageBox(strWindowText);
+			if(-1 != strWindowText.Find(caption.c_str()))
 			{
-				return;
+				CRect rect;
+				pWnd->GetWindowRect(&rect);
+				TRACE("\n%s", strWindowText);
+				TRACE("\n%s %d %d", strWindowText, rect.Width(), rect.Height());
+
+				caption = strWindowText;
+
+				//pWnd->SetWindowPos(&CWnd::wndTopMost, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE);//窗口置顶
+				//::SetWindowPos(pWnd->GetSafeHwnd(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE);
+				//::SetForegroundWindow(pWnd->GetSafeHwnd());//激活窗口但不置顶
+
+				pWnd->GetWindowRect(&rect);
+				TRACE("\n%s %d %d", strWindowText, rect.Width(), rect.Height());
+
+				break;
 			}
 
-			if(SS_NoErr != SINGLETON(CScheduleServer).add_task(rtmp_push_task, task_info.task_id))
-			{
-				delete rtmp_push_task;
-				rtmp_push_task = NULL;
-
-				return;
-			}
+			//继续下一个子窗口
+			pWnd = pWnd->GetWindow(GW_HWNDNEXT);
 		}
 
-		//SDK
-		{
-			SDK_RECV_TASK_INFO task_info;
-
-			task_info.task_id = id + 1;
-			task_info.ua_id = id;
-
-			task_info.data_url = "720p.yuv";
-			//task_info.data_url = "cif.yuv";
-			task_info.fps = 30;
-			task_info.video_width = 1280;//352;
-			task_info.video_height = 720;//288;
-
-			sdk_recv_task = new CVideoPullTask(task_info);
-
-			if(false == sdk_recv_task->is_initialized())
-			{
-				rtmp_push_task->shutdown();
-				return;
-			}
-
-			if(SS_NoErr != SINGLETON(CScheduleServer).add_task(sdk_recv_task, task_info.task_id))
-			{
-				delete sdk_recv_task;
-				sdk_recv_task = NULL;
-
-				rtmp_push_task->shutdown();
-
-				return;
-			}
-
-			/*hls_url = "http://";
-			hls_url += SINGLETON(CConfigBox).get_property("HLSServer", "localhost");
-			hls_url += ":";
-			hls_url += SINGLETON(CConfigBox).get_property("HLSServerPort", "8080");
-			hls_url += "/hls/";
-			hls_url += MiscTools::parse_type_to_string<unsigned long>(id);
-			hls_url += ".m3u8";
-
-			rtmp_url = "rtmp://";
-			rtmp_url += SINGLETON(CConfigBox).get_property("HLSServer", "localhost");
-			rtmp_url += ":";
-			rtmp_url += SINGLETON(CConfigBox).get_property("RTMPServerPort", "1935");
-			rtmp_url += "/hls/";
-			rtmp_url += MiscTools::parse_type_to_string<unsigned long>(id);*/
-		}
-
-		//success////////////////////////////////////////////////////////////////////////
-		SINGLETON(CScheduleServer)._push_task_map[id] = rtmp_push_task;
-		SINGLETON(CScheduleServer)._pull_task_map[id] = sdk_recv_task;
-
-		res.num = MiscTools::parse_type_to_string<unsigned long>(id);
-		//res.url = hls_url;
-		//res.url2 = rtmp_url;
-		res.expire = "300";
-		SINGLETON(CScheduleServer).insert_livecast_map(req, res);
-
-		//Json::Value json_value;
-		//json_value["StreamNo"] = Json::Value(MiscTools::parse_type_to_string<unsigned long>(id));
-		//json_value["StreamUrl"] = Json::Value(hls_url);
-		//json_value["StreamUrl2"] = Json::Value(rtmp_url);
-		//json_value["ExpireTime"] = Json::Value("300");
-
-		//Json::FastWriter fast_writer;
-		return;//return return_response(0, "success", fast_writer.write(json_value), 6000);//return fast_writer.write(json_value);
+		if(NULL == pWnd) caption = "";
 	}
+	//SINGLETON(CScheduleServer).add_video_pull_task(111, "test.yuv");
+	//SINGLETON(CScheduleServer).add_video_pull_task(222, "720p.yuv");
+	SINGLETON(CScheduleServer).add_capture_screen_task(111, caption);
+
+	m_rtmp_start_btn.EnableWindow(FALSE);
+	m_rtmp_stop_btn.EnableWindow(TRUE);
 }
 
 void CRenderingServerDlg::OnBnClickedButtonRTMPStop()  //�Ͽ�����
 {
-	SINGLETON(CScheduleServer).stop_rtmp_push(123);
+	if(false)
+	{
+		//窗口置顶
+		string caption = SINGLETON(CConfigBox).get_property("Window", "");
+
+		if(false == caption.empty())
+		{
+			CWnd* pWnd = CWnd::GetDesktopWindow()->GetWindow(GW_CHILD);
+		
+			while(pWnd != NULL)
+			{
+				CString strClassName = _T("");
+				::GetClassName(pWnd->GetSafeHwnd(),strClassName.GetBuffer(256),256);
+
+				CString strWindowText = _T("");
+				::GetWindowText(pWnd->GetSafeHwnd(),strWindowText.GetBuffer(256),256);
+
+				if(-1 != strWindowText.Find(caption.c_str()))
+				{
+					//pWnd->SetWindowPos(&CWnd::wndTopMost, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE);//窗口置顶
+					//::SetWindowPos(pWnd->GetSafeHwnd(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE);
+					::SetForegroundWindow(pWnd->GetSafeHwnd());//激活窗口但不置顶
+					break;
+				}
+
+				pWnd = pWnd->GetWindow(GW_HWNDNEXT);
+			}
+		}
+
+		//光标居中
+		SetCursorPos(GetSystemMetrics(SM_CXSCREEN) / 2,  GetSystemMetrics(SM_CYSCREEN) / 2);
+
+		//mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+		//mouse_event(MOUSEEVENTF_MOVE, 0, -100, 0, 0);
+		//mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+
+		mouse_event(MOUSEEVENTF_WHEEL, 0, 0, -50, 0);
+		return;
+	}
+
+	//SINGLETON(CScheduleServer).stop_rtmp_push(123);
 
 	//shutdown_audio_sampler();
+
+	SINGLETON(CScheduleServer).remove_capture_screen_task();
 
 	m_rtmp_start_btn.EnableWindow(TRUE);
 	m_rtmp_stop_btn.EnableWindow(FALSE);

@@ -16,7 +16,8 @@ using namespace ScheduleServer;
 //CSSMutex CVideoPullTask::_sdk_init_mutex;
 
 CVideoPullTask::CVideoPullTask(SDK_RECV_TASK_INFO& task_info):
-CDataRecvTask(task_info)
+CDataRecvTask(task_info),
+_action_offset(0)
 {
 	_yuv_file = NULL;
 
@@ -47,7 +48,7 @@ int CVideoPullTask::init()
 	_frame_interval = CLOCKS_PER_SEC / _task_info.fps;
 
 	//_x264_handle = H264EncodeInit(_task_info.video_width, _task_info.video_height, 30, 1000, 30, 1024, _task_info.fps);
-	_x264_handle = H264EncodeInit(_task_info.video_width, _task_info.video_height, 30, 1000, 30, 3072, _task_info.fps);
+	_x264_handle = H264EncodeInit(_task_info.video_width, _task_info.video_height, 30, 1000, 30, 1024, _task_info.fps);
 
 	_last_video_packet_type = NAL_INVALID;
 	_video_frame_length = 0;
@@ -80,6 +81,36 @@ int CVideoPullTask::disconnect_device()
 	return 0;
 }
 
+void CVideoPullTask::left()
+{
+	_action_offset = 30;
+}
+
+void CVideoPullTask::right()
+{
+	_action_offset = 50;
+}
+
+void CVideoPullTask::up()
+{
+	_action_offset = 40;
+}
+
+void CVideoPullTask::down()
+{
+	_action_offset = 30;
+}
+
+void CVideoPullTask::zoom_in()
+{
+	_action_offset = 30;
+}
+
+void CVideoPullTask::zoom_out()
+{
+	_action_offset = 30;
+}
+
 SS_Error CVideoPullTask::run()
 {
 	if (SS_RecvData != CDataRecvTask::run()) return SS_NoErr;
@@ -96,6 +127,17 @@ SS_Error CVideoPullTask::run()
 	//TRACE("\nRUN");
 
 	_next_fetch_video_frame_timestamp += _frame_interval;
+
+	if(_action_offset)
+	{
+		//fseek(_yuv_file, _action_offset * _task_info.video_width * _task_info.video_height * 3 / 2, SEEK_CUR);
+		if(fseek(_yuv_file, 150 * _task_info.video_width * _task_info.video_height * 3 / 2, SEEK_CUR))
+		{
+			fseek(_yuv_file, 0, SEEK_SET);
+			return SS_NoErr;
+		}
+		_action_offset = 0;
+	}	
 
 	if(feof(_yuv_file))
 	{
@@ -163,68 +205,6 @@ SS_Error CVideoPullTask::run()
 
 	return SS_NoErr;
 }
-
-/*void CVideoPullTask::on_recv_packet(unsigned char* data, int len)
-{
-	_last_packet_timestamp = timeGetTime();
-
-	long index = 0;
-
-	//���費����NAL���������packet�����
-	while(index < len - 5)
-	{
-		if(0 == data[index] && 0 == data[index + 1] && 0 == data[index + 2] && 1 == data[index + 3])
-		{
-			if(_frame_pos)
-			{
-				NAL_TYPE type = (NAL_TYPE)(_frame[4] & 0x1f);
-				if(NAL_SPS == type)
-
-					_got_sps_pps = true;
-
-				if(true == _got_sps_pps)
-				{
-					on_recv_frame(_frame, _frame_pos, false);
-
-#ifdef PUSH_HK_VIDEO_FILE
-					if(NAL_SLICE_IDR == type || NAL_SLICE == type)
-					{
-						//TRACE("\n<INC %d", _next_fetch_video_frame_timestamp);
-						_next_fetch_video_frame_timestamp += HK_VIDEO_FRAME_INTERVAL;
-						//TRACE(" -> %d>", _next_fetch_video_frame_timestamp);
-					}
-					//fl = 0;
-#endif
-				}
-
-				//TRACE("\n------------------ <Frame %d length: %d @ %d", data[index + 4] & 0x1f, _frame_pos, _last_packet_timestamp);
-				//TRACE("\n------------------ <Frame %d length: %d @ %d", _frame[4] & 0x1f, _frame_pos, _last_packet_timestamp);
-			}
-			
-			_frame_pos = 0;
-
-			memcpy(_frame + _frame_pos, data + index, 4);
-			_frame_pos += 4;
-
-			index += 4;
-						
-			_last_frame_type = (NAL_TYPE)(data[index + 4] & 0x1f);
-		}
-		else
-		{
-			if(NAL_INVALID != _last_frame_type)
-			{
-				memcpy(_frame + _frame_pos, data + index, 1);
-				++_frame_pos;
-			}
-
-			++index;
-		}
-	}
-
-	memcpy(_frame + _frame_pos, data + index, len - index);
-	_frame_pos += (len - index);
-}*/
 
 SS_Error CVideoPullTask::on_done()
 {

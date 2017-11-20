@@ -26,7 +26,8 @@ double CTimeConsuming::_clock_frequency = 0;
 CScheduleServer::CScheduleServer() :
 _cur_path(""),
 _enalble(false),
-_register_thread(NULL)
+_register_thread(NULL),
+_status_edit(NULL)
 {
 	_ua_map.clear();
 }
@@ -55,9 +56,12 @@ SS_Error CScheduleServer::start(std::string path)
 	CTaskThreadPool::add_threads((!(theSystemInfo.dwNumberOfProcessors) ? 1 : theSystemInfo.dwNumberOfProcessors), this);
 
 	SINGLETON(HttpServer::CHttpService).Initialize();
-	SINGLETON(HttpServer::CHttpService).Start(SINGLETON(CConfigBox).get_property("HttpServer", "localhost"), SINGLETON(CConfigBox).get_property_as_int("HttpServerPort", 80));
+	SINGLETON(HttpServer::CHttpService).Start("0.0.0.0", SINGLETON(CConfigBox).get_property_as_int("HttpServerPort", 80));
 
 	_enalble = true;//服务可用
+
+	_status_edit = (CEdit*)(AfxGetApp()->GetMainWnd()->GetDlgItem(IDC_EDIT_HTTP_SERVICE));//->SetWindowText(decodedURI.c_str());
+	_status = "";
 
 	return SS_NoErr;
 
@@ -282,4 +286,303 @@ int CScheduleServer::h264_test()
 int CScheduleServer::http_test()
 {
 	return 0;
+}
+
+#include "RTMPPushTask.h"
+#include "VideoPullTask.h"
+SS_Error CScheduleServer::add_video_pull_task(unsigned long id, string file)
+{
+	LiveCastRequest req;
+
+	LiveCastResponse res = SINGLETON(CScheduleServer).query_livecast_response(req);
+
+	{
+		//unsigned long id = 123;//timeGetTime() & 0xffffff;
+		CRTMPPushTask* rtmp_push_task = NULL;
+		CDataRecvTask* sdk_recv_task = NULL;//CDPSDKLivePullTask* sdk_recv_task = NULL;
+
+		//RTMP
+		{
+			RTMP_PUSH_TASK_INFO task_info;
+
+			task_info.task_id = id;
+			task_info.ua_id = id;
+
+			task_info.rtmp_url = "rtmp://";
+			task_info.rtmp_url += SINGLETON(CConfigBox).get_property("HLSServer", "localhost");
+			task_info.rtmp_url += ":" + SINGLETON(CConfigBox).get_property("RTMPServerPort", "1935");
+			task_info.rtmp_url += "/hls/";
+			task_info.rtmp_url += MiscTools::parse_type_to_string<unsigned long>(task_info.ua_id);
+			
+			rtmp_push_task = new CRTMPPushTask(task_info);
+
+			if(false == rtmp_push_task->is_initialized())
+			{
+				return SS_NoErr;
+			}
+
+			if(SS_NoErr != SINGLETON(CScheduleServer).add_task(rtmp_push_task, task_info.task_id))
+			{
+				delete rtmp_push_task;
+				rtmp_push_task = NULL;
+
+				return SS_NoErr;
+			}
+		}
+
+		//SDK
+		{
+			SDK_RECV_TASK_INFO task_info;
+
+			task_info.task_id = id + 1;
+			task_info.ua_id = id;
+
+			task_info.data_url = file;
+			//task_info.data_url = "cif.yuv";
+			task_info.fps = 15;
+			task_info.video_width = 1280;//352;
+			task_info.video_height = 720;//288;
+
+			sdk_recv_task = new CVideoPullTask(task_info);
+
+			if(false == sdk_recv_task->is_initialized())
+			{
+				rtmp_push_task->shutdown();
+				return SS_NoErr;
+			}
+
+			if(SS_NoErr != SINGLETON(CScheduleServer).add_task(sdk_recv_task, task_info.task_id))
+			{
+				delete sdk_recv_task;
+				sdk_recv_task = NULL;
+
+				rtmp_push_task->shutdown();
+
+				return SS_NoErr;
+			}
+		}
+
+		//success////////////////////////////////////////////////////////////////////////
+		SINGLETON(CScheduleServer)._push_task_map[id] = rtmp_push_task;
+		SINGLETON(CScheduleServer)._pull_task_map[id] = sdk_recv_task;
+
+		res.num = MiscTools::parse_type_to_string<unsigned long>(id);
+		//res.url = hls_url;
+		//res.url2 = rtmp_url;
+		res.expire = "300";
+		SINGLETON(CScheduleServer).insert_livecast_map(req, res);
+
+		//Json::Value json_value;
+		//json_value["StreamNo"] = Json::Value(MiscTools::parse_type_to_string<unsigned long>(id));
+		//json_value["StreamUrl"] = Json::Value(hls_url);
+		//json_value["StreamUrl2"] = Json::Value(rtmp_url);
+		//json_value["ExpireTime"] = Json::Value("300");
+
+		//Json::FastWriter fast_writer;
+		//return return_response(0, "success", fast_writer.write(json_value), 6000);//return fast_writer.write(json_value);
+	}
+
+	return SS_NoErr;
+}
+
+#include "CaptureScreenTask.h"
+SS_Error CScheduleServer::add_capture_screen_task(unsigned long id, string window_caption)
+{
+	LiveCastRequest req;
+
+	LiveCastResponse res = SINGLETON(CScheduleServer).query_livecast_response(req);
+
+	{
+		//unsigned long id = 123;//timeGetTime() & 0xffffff;
+		//CRTMPPushTask* rtmp_push_task = NULL;
+		//CDataRecvTask* sdk_recv_task = NULL;//CDPSDKLivePullTask* sdk_recv_task = NULL;
+		rtmp_push_task = NULL;
+		sdk_recv_task = NULL;//CDPSDKLivePullTask* sdk_recv_task = NULL;
+
+		//RTMP
+		{
+			RTMP_PUSH_TASK_INFO task_info;
+
+			task_info.task_id = id;
+			task_info.ua_id = id;
+
+			task_info.rtmp_url = "rtmp://";
+			task_info.rtmp_url += SINGLETON(CConfigBox).get_property("HLSServer", "localhost");
+			task_info.rtmp_url += ":" + SINGLETON(CConfigBox).get_property("RTMPServerPort", "1935");
+			task_info.rtmp_url += "/hls/";
+			task_info.rtmp_url += MiscTools::parse_type_to_string<unsigned long>(task_info.ua_id);
+
+			rtmp_push_task = new CRTMPPushTask(task_info);
+
+			if(false == dynamic_cast<CRTMPPushTask*>(rtmp_push_task)->is_initialized())
+			{
+				return SS_NoErr;
+			}
+
+			if(SS_NoErr != SINGLETON(CScheduleServer).add_task(rtmp_push_task, task_info.task_id))
+			{
+				delete rtmp_push_task;
+				rtmp_push_task = NULL;
+
+				return SS_NoErr;
+			}
+		}
+
+		//SDK
+		{
+			SDK_RECV_TASK_INFO task_info;
+
+			task_info.task_id = id + 1;
+			task_info.ua_id = id;
+
+			task_info.fps = 15;
+			task_info.video_width = 1280;//352;
+			task_info.video_height = 720;//288;
+
+			task_info.window_caption = window_caption;
+
+			sdk_recv_task = new CCaptureScreenTask(task_info);
+
+			if(false == dynamic_cast<CCaptureScreenTask*>(sdk_recv_task)->is_initialized())
+			{
+				rtmp_push_task->shutdown();
+				return SS_NoErr;
+			}
+
+			if(SS_NoErr != SINGLETON(CScheduleServer).add_task(sdk_recv_task, task_info.task_id))
+			{
+				delete sdk_recv_task;
+				sdk_recv_task = NULL;
+
+				rtmp_push_task->shutdown();
+
+				return SS_NoErr;
+			}
+		}
+
+		if(true)
+		{
+			//窗口置顶
+			string caption = SINGLETON(CConfigBox).get_property("Window", "");
+
+			if(false == caption.empty())
+			{
+				CWnd* pWnd = CWnd::GetDesktopWindow()->GetWindow(GW_CHILD);
+		
+				while(pWnd != NULL)
+				{
+					CString strClassName = _T("");
+					::GetClassName(pWnd->GetSafeHwnd(),strClassName.GetBuffer(256),256);
+
+					CString strWindowText = _T("");
+					::GetWindowText(pWnd->GetSafeHwnd(),strWindowText.GetBuffer(256),256);
+
+					if(-1 != strWindowText.Find(caption.c_str()))
+					{
+						//pWnd->SetWindowPos(&CWnd::wndTopMost, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE);//窗口置顶
+						//::SetWindowPos(pWnd->GetSafeHwnd(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE);
+						::SetForegroundWindow(pWnd->GetSafeHwnd());//激活窗口但不置顶
+						break;
+					}
+
+					pWnd = pWnd->GetWindow(GW_HWNDNEXT);
+				}
+			}
+
+			//光标居中
+			SetCursorPos(GetSystemMetrics(SM_CXSCREEN) / 2,  GetSystemMetrics(SM_CYSCREEN) / 2);
+		}
+
+		//success////////////////////////////////////////////////////////////////////////
+		SINGLETON(CScheduleServer)._push_task_map[id] = rtmp_push_task;
+		SINGLETON(CScheduleServer)._pull_task_map[id] = sdk_recv_task;
+
+		res.num = MiscTools::parse_type_to_string<unsigned long>(id);
+		//res.url = hls_url;
+		//res.url2 = rtmp_url;
+		res.expire = "300";
+		SINGLETON(CScheduleServer).insert_livecast_map(req, res);
+	}
+
+	return SS_NoErr;
+}
+
+SS_Error CScheduleServer::remove_capture_screen_task()
+{
+	if(NULL != rtmp_push_task) rtmp_push_task->shutdown();
+	if(NULL != sdk_recv_task) sdk_recv_task->shutdown();
+
+	Sleep(3000);
+
+	return SS_NoErr;
+}
+
+void CScheduleServer::on_mouse_action(string action, string arg)
+{
+	//窗口置顶
+	string caption = SINGLETON(CConfigBox).get_property("Window", "");
+
+	if(false == caption.empty())
+	{
+		CWnd* pWnd = CWnd::GetDesktopWindow()->GetWindow(GW_CHILD);
+		
+		while(pWnd != NULL)
+		{
+			CString strClassName = _T("");
+			::GetClassName(pWnd->GetSafeHwnd(),strClassName.GetBuffer(256),256);
+
+			CString strWindowText = _T("");
+			::GetWindowText(pWnd->GetSafeHwnd(),strWindowText.GetBuffer(256),256);
+
+			if(-1 != strWindowText.Find(caption.c_str()))
+			{
+				//pWnd->SetWindowPos(&CWnd::wndTopMost, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE);//窗口置顶
+				//::SetWindowPos(pWnd->GetSafeHwnd(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE);
+				::SetForegroundWindow(pWnd->GetSafeHwnd());//激活窗口但不置顶
+				break;
+			}
+
+			pWnd = pWnd->GetWindow(GW_HWNDNEXT);
+		}
+	}
+
+	//光标居中
+	SetCursorPos(GetSystemMetrics(SM_CXSCREEN) / 2,  GetSystemMetrics(SM_CYSCREEN) / 2);
+
+	int x_step = SINGLETON(CConfigBox).get_property_as_int("XStep", 50);
+	int y_step = SINGLETON(CConfigBox).get_property_as_int("YStep", 50);
+	int zoom_step = SINGLETON(CConfigBox).get_property_as_int("ZoomStep", 50);
+
+	if("left" == action)
+	{
+		mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+		mouse_event(MOUSEEVENTF_MOVE, -x_step, 0, 0, 0);
+		mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+	}
+	else if("right" == action)
+	{
+		mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+		mouse_event(MOUSEEVENTF_MOVE, x_step, 0, 0, 0);
+		mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+	}
+	else if("up" == action)
+	{
+		mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+		mouse_event(MOUSEEVENTF_MOVE, 0, -y_step, 0, 0);
+		mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+	}
+	else if("down" == action)
+	{
+		mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+		mouse_event(MOUSEEVENTF_MOVE, 0, y_step, 0, 0);
+		mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+	}
+	else if("zoomin" == action)
+	{
+		mouse_event(MOUSEEVENTF_WHEEL, 0, 0, zoom_step, 0);
+	}
+	else if("zoomout" == action)
+	{
+		mouse_event(MOUSEEVENTF_WHEEL, 0, 0, -zoom_step, 0);
+	}
 }

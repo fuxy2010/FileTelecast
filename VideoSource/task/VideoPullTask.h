@@ -5,8 +5,8 @@
 // �޸���ʷ��¼: 
 // ����, ����, �������
 // **********************************************************************
-#ifndef _HKP_SDK_LIVE_PULL_TASK_H_
-#define _HKP_SDK_LIVE_PULL_TASK_H_
+#ifndef _VIDEO_PULL_TASK_H_
+#define _VIDEO_PULL_TASK_H_
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 #pragma once
@@ -59,19 +59,30 @@ namespace ScheduleServer
 		FILE* _yuv_file;
 		//bool _start_write;
 		unsigned long _next_fetch_video_frame_timestamp;
-		unsigned char _yuv[1920 * 1080 * 3 / 2];
+		unsigned char _yuv[1920 * 1080 * 3 / 2];//YUV码流
 		unsigned long _frame_interval;
 		//bool _got_sps_pps;
 
 	private:
 		long _x264_handle;//定义一路编码器
-		unsigned char _stream_buf[655360];//编码后一帧码流的缓存
+		unsigned char _stream_buf[6553600];//H264EncodeFrame编码后一帧码流的缓存
 		int _nal_len[1024]; //定义数据包尺寸存储数组,注意数组的尺寸不能太小
 
 		NAL_TYPE _last_video_packet_type;
-		unsigned char _video_frame[65536 * 100];
+		unsigned char _video_frame[65536 * 100];//编码后拼帧供推送
 		int _video_frame_length;
+
+	private:
+		unsigned long _action_offset;
+
+	public:
+		void left();
+		void right();
+		void up();
+		void down();
+		void zoom_in();
+		void zoom_out();
 	};
 }
 
-#endif  //_HKP_SDK_LIVE_PULL_TASK_H_      
+#endif  //_VIDEO_PULL_TASK_H_      

@@ -38,10 +38,13 @@ namespace ScheduleServer
 		unsigned short	fps;
 		unsigned short	video_width;
 		unsigned short	video_height;
+		string			window_caption;
 
 		tagSDK_RECV_TASK_INFO() : task_id(0), ua_id(0), create_timestamp(::time(NULL)), fps(25), video_width(1280), video_height(720)
 		{
 			data_url = "";
+			window_caption = "";
+
 		}
 
 		~tagSDK_RECV_TASK_INFO()

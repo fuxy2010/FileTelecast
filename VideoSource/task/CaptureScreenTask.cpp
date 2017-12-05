@@ -49,7 +49,7 @@ int CCaptureScreenTask::init()
 
 	int bitrate = SINGLETON(CConfigBox).get_property_as_int("VideoBitrate", 1024);
 	//_x264_handle = H264EncodeInit(_task_info.video_width, _task_info.video_height, 30, 1000, 30, 1024, _task_info.fps);
-	_x264_handle = H264EncodeInit(_task_info.video_width, _task_info.video_height, 30, 1000, 30, 2048, _task_info.fps);
+	_x264_handle = H264EncodeInit(_task_info.video_width, _task_info.video_height, 45, 1000, 60, bitrate, _task_info.fps);
 
 	_last_video_packet_type = NAL_INVALID;
 	_video_frame_length = 0;

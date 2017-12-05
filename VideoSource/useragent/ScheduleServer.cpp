@@ -122,7 +122,7 @@ int CScheduleServer::start_rtmp_push(const unsigned long uuid)
 	if(NULL != ua)
 	{
 		string url = "rtmp://";
-		url += SINGLETON(CConfigBox).get_property("HLSServer", "localhost");
+		url += SINGLETON(CConfigBox).get_property("RTMPServer", "localhost");
 		url += "/hls/";
 		url += MiscTools::parse_type_to_string<unsigned long>(uuid);
 		ret = 1;//ua->rtmp_connect(const_cast<char*>(url.c_str()));
@@ -309,7 +309,7 @@ SS_Error CScheduleServer::add_video_pull_task(unsigned long id, string file)
 			task_info.ua_id = id;
 
 			task_info.rtmp_url = "rtmp://";
-			task_info.rtmp_url += SINGLETON(CConfigBox).get_property("HLSServer", "localhost");
+			task_info.rtmp_url += SINGLETON(CConfigBox).get_property("RTMPServer", "localhost");
 			task_info.rtmp_url += ":" + SINGLETON(CConfigBox).get_property("RTMPServerPort", "1935");
 			task_info.rtmp_url += "/hls/";
 			task_info.rtmp_url += MiscTools::parse_type_to_string<unsigned long>(task_info.ua_id);
@@ -340,8 +340,8 @@ SS_Error CScheduleServer::add_video_pull_task(unsigned long id, string file)
 			task_info.data_url = file;
 			//task_info.data_url = "cif.yuv";
 			task_info.fps = 15;
-			task_info.video_width = 1280;//352;
-			task_info.video_height = 720;//288;
+			task_info.video_width = SINGLETON(CConfigBox).get_property_as_int("VideoWidth", 640);//640;//1280;//352;
+			task_info.video_height = SINGLETON(CConfigBox).get_property_as_int("VideoHeight", 480);//480;//720;//288;
 
 			sdk_recv_task = new CVideoPullTask(task_info);
 
@@ -407,7 +407,7 @@ SS_Error CScheduleServer::add_capture_screen_task(unsigned long id, string windo
 			task_info.ua_id = id;
 
 			task_info.rtmp_url = "rtmp://";
-			task_info.rtmp_url += SINGLETON(CConfigBox).get_property("HLSServer", "localhost");
+			task_info.rtmp_url += SINGLETON(CConfigBox).get_property("RTMPServer", "localhost");
 			task_info.rtmp_url += ":" + SINGLETON(CConfigBox).get_property("RTMPServerPort", "1935");
 			task_info.rtmp_url += "/hls/";
 			task_info.rtmp_url += MiscTools::parse_type_to_string<unsigned long>(task_info.ua_id);
@@ -436,8 +436,9 @@ SS_Error CScheduleServer::add_capture_screen_task(unsigned long id, string windo
 			task_info.ua_id = id;
 
 			task_info.fps = 15;
-			task_info.video_width = 1280;//352;
-			task_info.video_height = 720;//288;
+
+			task_info.video_width = SINGLETON(CConfigBox).get_property_as_int("VideoWidth", 640);//640;//1280;//352;
+			task_info.video_height = SINGLETON(CConfigBox).get_property_as_int("VideoHeight", 480);//480;//720;//288;
 
 			task_info.window_caption = window_caption;
 

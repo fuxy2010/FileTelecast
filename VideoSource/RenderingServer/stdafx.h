@@ -87,10 +87,6 @@ using namespace std;
 #pragma comment(lib, "../utility/H264/libx264-135.lib")
 //#pragma comment(lib, "../utility/H264/x264_encoder.lib")
 
-//#pragma comment(lib, "../utility/H264/packframe.lib")
-//#pragma comment(lib, "../utility/H264/avcodec.lib")//C°æ½âÂë¿â(h264 & h265)
-//#pragma comment(lib, "../utility/H264/avutil.lib")//C°æ½âÂë¿â(h264 & h265)
-
 #ifndef HIGHEST_LOG_LEVEL
 #define HIGHEST_LOG_LEVEL 10
 #endif

@@ -286,7 +286,7 @@ void CRenderingServerDlg::OnBnClickedButtonRTMPStart()  //����(���
 		if(NULL == pWnd) caption = "";
 	}
 	//SINGLETON(CScheduleServer).add_video_pull_task(111, "test.yuv");
-	//SINGLETON(CScheduleServer).add_video_pull_task(222, "720p.yuv");
+	//SINGLETON(CScheduleServer).add_video_pull_task(111, "720p.yuv");
 	SINGLETON(CScheduleServer).add_capture_screen_task(111, caption);
 
 	m_rtmp_start_btn.EnableWindow(FALSE);

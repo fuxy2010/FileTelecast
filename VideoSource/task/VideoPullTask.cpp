@@ -47,8 +47,9 @@ int CVideoPullTask::init()
 
 	_frame_interval = CLOCKS_PER_SEC / _task_info.fps;
 
+	int bitrate = SINGLETON(CConfigBox).get_property_as_int("VideoBitrate", 1024);
 	//_x264_handle = H264EncodeInit(_task_info.video_width, _task_info.video_height, 30, 1000, 30, 1024, _task_info.fps);
-	_x264_handle = H264EncodeInit(_task_info.video_width, _task_info.video_height, 30, 1000, 30, 1024, _task_info.fps);
+	_x264_handle = H264EncodeInit(_task_info.video_width, _task_info.video_height, 30, 1000, 30, bitrate, _task_info.fps);
 
 	_last_video_packet_type = NAL_INVALID;
 	_video_frame_length = 0;

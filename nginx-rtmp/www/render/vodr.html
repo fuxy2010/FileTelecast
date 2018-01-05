@@ -1,0 +1,112 @@
+﻿<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Octane Render</title>
+	</head>
+<body  onload="start()">
+	<!-- h1>Video Player Html5</h1 -->
+	<video src = "xxx.m3u8" width = "640" height = "480" controls = "controls">
+		该浏览器不支持video标签
+	</video>
+	<script type="text/javascript">
+		function start()
+		{
+			document.getElementsByTagName("video")[0].src = "rtmp://" + window.location.hostname + ":1935/hls/111";
+			document.getElementsByTagName("video")[0].play();
+		}
+		function ajax(flag)
+		{
+			//先声明一个异步请求对象
+			var xmlHttpReg = null;
+			if (window.ActiveXObject)
+			{
+				xmlHttpReg = new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			else if (window.XMLHttpRequest)
+			{
+				xmlHttpReg = new XMLHttpRequest(); //实例化一个xmlHttpReg
+			}
+			
+			//如果实例化成功,就调用open()方法,就开始准备向服务器发送请求
+			if (xmlHttpReg != null)
+			{
+				var req_url = "http://";
+				req_url += window.location.hostname;
+				req_url += ":8888/action.html?id=111&action=";
+				req_url += flag;
+				req_url += "&arg=test";
+
+				//alert(req_url);
+
+				xmlHttpReg.open("get", req_url, true);
+				xmlHttpReg.send(null);
+				xmlHttpReg.onreadystatechange = doResult; //设置回调函数
+			}
+			
+			//回调函数
+			//一旦readyState的值改变,将会调用这个函数,readyState=4表示完成相应
+			
+			//设定函数doResult()
+			function doResult()
+			{
+				if (xmlHttpReg.readyState == 4)
+				{
+					//4代表执行完成
+					
+					if (xmlHttpReg.status == 200)
+					{
+						//200代表执行成功
+						//将xmlHttpReg.responseText的值赋给ID为resText的元素
+						document.getElementById("resText").innerHTML = xmlHttpReg.responseText;
+						alert(xmlHttpReg.responseText);
+					}
+				}
+			}
+		}
+
+		function action_left()
+		{
+			ajax("left");
+			//alert("左移");				
+		}
+
+		function action_right()
+		{
+			ajax("right");
+			//alert("右移");				
+		}
+
+		function action_up()
+		{
+			ajax("up");
+			//alert("上移");				
+		}
+
+		function action_down()
+		{
+			ajax("down");
+			//alert("下移");				
+		}
+
+		function action_zoomin()
+		{
+			ajax("zoomin");
+			//alert("放大");				
+		}
+
+		function action_zoomout()
+		{
+			ajax("zoomout");
+			//alert("缩小");				
+		}
+	</script>	
+	<p>
+		<button type="button" onclick="action_left()">左</button>
+		<button type="button" onclick="action_right()">右</button>
+		<button type="button" onclick="action_up()">上</button>
+		<button type="button" onclick="action_down()">下</button>			
+		<button type="button" onclick="action_zoomin()">放大</button>
+		<button type="button" onclick="action_zoomout()">缩小</button>
+	</p>
+</body>
+</html>

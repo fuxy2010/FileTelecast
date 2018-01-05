@@ -233,7 +233,7 @@ void CRenderingServerDlg::OnClose()  //�������������Ͻ
 
 void CRenderingServerDlg::OnBnClickedButtonRTMPStart()  //����(�����豸)
 {
-	if(true)
+	if(false)
 	{
 		SINGLETON(CScheduleServer).add_video_pull_task(111, "720p.yuv");
 		return;

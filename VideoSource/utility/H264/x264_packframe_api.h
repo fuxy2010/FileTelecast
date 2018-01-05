@@ -12,24 +12,54 @@ extern "C" {
  * 初始化H.264编码器
  * @param width： 视频帧的宽度
  * @param height：视频帧的高度
- * @param qp：量化步长（在10~51之间取值）
+ * @param i_p_size：I帧与P帧大小的比例，取值:1-30。值越小，码率越平滑，但I帧质量越差。为1时I帧与帧一样大。
  * @param slice_size：视频数据包的最大字节数目
  * @param IntraPeriod：关键帧的周期，即多少帧一个关键帧
  * @param bitrate：码率（单位：Kbit/s， 为0时关闭码率控制）
  * @param fps：帧率(同等码率下，帧率越高，质量越差，反之，帧率越低，质量越好)
  * @return：返回值为编码器的句柄
  */
-long H264EncodeInit(int width, int height, int qp, int slice_size, int IntraPeriod, int bitrate, int fps);
+long H264EncodeInit(int width, 
+					int height, 
+					int i_p_size, 
+					int slice_size, 
+					int IntraPeriod, 
+					int bitrate, 
+					int fps);
 
 
 /**
- * 编码一帧
+ * 初始化H.264编码器
+ * @param width： 视频帧的宽度
+ * @param height：视频帧的高度
+ * @param i_p_size：I帧与P帧大小的比例，取值:1-30。值越小，码率越平滑，但I帧质量越差。为1时I帧与帧一样大。
+ * @param slice_size：视频数据包的最大字节数目
+ * @param IntraPeriod：关键帧的周期，即多少帧一个关键帧
+ * @param bitrate：码率（单位：Kbit/s， 为0时关闭码率控制）
+ * @param fps：帧率(同等码率下，帧率越高，质量越差，反之，帧率越低，质量越好)
+ * @param b_sliced_threads：并行级别（0：帧级并行，1：片级并行）。片级并行无时延但速度最高提升2倍，帧级并行1~N帧时延，N是线程数，速度提高N倍。  
+ * @param threads：帧级并行时的线程数目，建议线程数不超过CPU核心数
+ * @return：返回值为编码器的句柄
+ */
+long H264EncodeInit2(int width, 
+					int height, 
+					int i_p_size, 
+					int slice_size, 
+					int IntraPeriod, 
+					int bitrate, 
+					int fps, 
+					int b_sliced_threads, 
+					int threads);
+
+
+/**
+ * 初始化编码器
  * @param handle： 编码器的句柄
  * @param frame_type：强制把当前帧编码为指定类型的帧（0：P帧  1:关键帧  -1:由编码器自动决策）
  * @param in：一帧YUV数据
  * @param out：一帧码流数据
  * @param nal_len：一帧分为多个片，该数组记录每个片的尺寸
- * @return：返回值为一帧码流所包含的片数目
+ * @return：返回值大于零时为一帧码流所包含的片数目；小于等于零时说明为多线程，只有开始的N帧返回值小于零，N为线程数目
  */
 int H264EncodeFrame(long handle, int frame_type, unsigned char * in, unsigned char * out, int *nal_len);
 
@@ -39,10 +69,6 @@ int H264EncodeFrame(long handle, int frame_type, unsigned char * in, unsigned ch
  * @param handle： 编码器的句柄
  */
 void H264EncodeClose(long handle);
-
-
-
-
 
 //*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*  x264 解码   *=*=*=*=*=*=*=*=*=*=*/
 
@@ -124,7 +150,6 @@ int isH264IntraFrame(unsigned char *frmbuf,int len);
 
 //销毁H264的拼帧器，输入拼帧器句柄
 void DestroyH264Packer(void *handle);
-
 
 #ifdef __cplusplus
 }

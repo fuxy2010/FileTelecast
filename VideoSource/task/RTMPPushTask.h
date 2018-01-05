@@ -89,6 +89,9 @@ namespace ScheduleServer
 		bool is_initialized() { return _initialized; }
 
 		virtual void shutdown() { _status = RTMPPushTask_Done; }
+
+	protected:
+		//RTSPServerLib::CRTSPServer* _rtsp_server;
 	};
 }
 

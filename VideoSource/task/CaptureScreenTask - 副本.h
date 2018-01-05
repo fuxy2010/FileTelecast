@@ -17,18 +17,6 @@
 #include "time.h"
 #include "ScheduleServer.h"
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-#include "libavformat\avformat.h"
-#include "libavdevice\avdevice.h"
-#include "libswscale\swscale.h"
-//#include "SDL/SDL.h"
-#ifdef __cplusplus
-};
-#endif
-
 namespace ScheduleServer
 {
 	class CCaptureScreenTask : public CDataRecvTask
@@ -58,10 +46,25 @@ namespace ScheduleServer
 		//void on_recv_packet(unsigned char* data, int len);
 
 	private:
-		//unsigned char* _yuv;//屏幕YUV
-		//unsigned char* _yuv2;//下采样YUV
+		string _ip;
+		string _port;
+		string _username;
+		string _password;
+		string _camera_id;
+		string _channel;
+
+		int _seq;
+
+	private:
+		int _screen_height;
+		int _screen_width;
+		//FILE* _yuv_file;
+		//bool _start_write;
 		unsigned long _next_fetch_video_frame_timestamp;
+		unsigned char* _yuv;//屏幕YUV
+		unsigned char* _yuv2;//下采样YUV
 		unsigned long _frame_interval;
+		//bool _got_sps_pps;
 
 	private:
 		long _x264_handle;//定义一路编码器
@@ -73,40 +76,18 @@ namespace ScheduleServer
 		int _video_frame_length;
 
 	private:
-		void capture_screen_by_win();
+		void capture_screen();
 
 	private:
-		AVFormatContext*	_format_ctx;
-		AVCodecContext*		_codec_ctx;
-		int					_video_index;
-		AVFrame*			_av_frame;
-		AVPacket*			_packet;
-		struct SwsContext*	_img_convert_ctx;
-		unsigned char*		_capture_yuv;
-
-		uint8_t*	_yuv_buf[4];
-		int			_yuv_size[4];
-		size_t		_frame_size;
-
-		void capture_screen_by_ffmpeg();
-		void screen_to_bgr(int left, int top, int right, int bottom, unsigned char* bgr);
-		//void screen_to_yuv();
-
-		int start_capture();
-		void shutdown_capture();
-		int capture();
+		unsigned long _action_offset;
 
 	public:
-		/*void left();
+		void left();
 		void right();
 		void up();
 		void down();
 		void zoom_in();
-		void zoom_out();*/
-
-	private:
-		unsigned char _rtsp_packet[1536];
-		unsigned short _sequence;
+		void zoom_out();
 	};
 }
 

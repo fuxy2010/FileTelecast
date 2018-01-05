@@ -10,6 +10,7 @@
 #include "TimeConsuming.h"
 #include "Transcoding.h"
 #include "Sizescale.h"
+#include "JRTPSession.h"
 
 #include "scheduleserver.h"
 
@@ -35,6 +36,8 @@ CDataRecvTask(task_info)
 		_initialized = false;
 	}
 
+	_sequence = 0;
+
 	//_got_sps_pps = false;
 }
 
@@ -48,8 +51,13 @@ int CCaptureScreenTask::init()
 	_frame_interval = CLOCKS_PER_SEC / _task_info.fps;
 
 	int bitrate = SINGLETON(CConfigBox).get_property_as_int("VideoBitrate", 1024);
+	int QP = SINGLETON(CConfigBox).get_property_as_int("VideoQP", 45);
 	//_x264_handle = H264EncodeInit(_task_info.video_width, _task_info.video_height, 30, 1000, 30, 1024, _task_info.fps);
-	_x264_handle = H264EncodeInit(_task_info.video_width, _task_info.video_height, 45, 1000, 60, bitrate, _task_info.fps);
+	//_x264_handle = H264EncodeInit(_task_info.video_width, _task_info.video_height, QP, 1000, 60, bitrate, _task_info.fps);
+	
+	//_x264_handle = H264EncodeInit(_task_info.video_width, _task_info.video_height, 35, 1000, 60, 512, _task_info.fps);
+
+	_x264_handle = H264EncodeInit(_task_info.video_width, _task_info.video_height, 30, 1000, 30, bitrate, _task_info.fps);
 
 	_last_video_packet_type = NAL_INVALID;
 	_video_frame_length = 0;
@@ -126,12 +134,38 @@ SS_Error CCaptureScreenTask::run()
 	if(0 >= i_nal) return SS_NoErr;
 
 	unsigned char *p = _stream_buf;
+	unsigned char *pp = _stream_buf;
 
 	_last_video_packet_type = NAL_INVALID;
 	_video_frame_length = 0;
 
+	unsigned long timestamp = timeGetTime();//同一帧内数据包均采用同样的时戳
+
 	for(int i = 0; i < i_nal; i++)
 	{
+		//RTSP
+		if(true)
+		{
+			RTSPServerLib::CRTSPServer* _rtsp_server = SINGLETON(CScheduleServer).get_rtsp_server();
+			
+			if(NULL != _rtsp_server)
+			{
+				::memset(_rtsp_packet, 0, sizeof(_rtsp_packet));
+				::memcpy(_rtsp_packet + sizeof(RTPHeader), pp, _nal_len[i]);
+
+				//TRACE("\n<%d of %d / %d> ", i + 1, i_nal, _nal_len[i]);
+
+				CRTPNATSession::add_rtp_header(_rtsp_packet, _nal_len[i] + sizeof(RTPHeader), 96, ((i == i_nal - 1) ? true : false), _sequence++, 0xFFFF & timestamp, 1);
+				
+				//RTPHeader* header = reinterpret_cast<RTPHeader*>(_rtsp_packet);
+				//TRACE("\n<%d %d %d %d>", header->payloadtype, ntohl(header->ssrc), ntohs(header->sequencenumber), ntohl(header->timestamp));
+
+				//_rtsp_server->input_stream_data(1, _rtsp_packet,  _nal_len[i] + sizeof(RTPHeader), RTSPServerLib::CRTSPServer::kVideoStream);
+			
+			}
+			pp += _nal_len[i];
+		}
+
 		int offset = 0;
 		NAL_TYPE type = CRTMPSession::get_video_packet_type(p, _nal_len[i], offset);
 

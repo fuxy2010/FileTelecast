@@ -63,6 +63,9 @@ SS_Error CScheduleServer::start(std::string path)
 	_status_edit = (CEdit*)(AfxGetApp()->GetMainWnd()->GetDlgItem(IDC_EDIT_HTTP_SERVICE));//->SetWindowText(decodedURI.c_str());
 	_status = "";
 
+	//int rtsp_port = SINGLETON(CConfigBox).get_property_as_int("RTSPServerPort", 1554);
+	//_rtsp_server = new RTSPServerLib::CRTSPServer(rtsp_port);
+
 	return SS_NoErr;
 
 }

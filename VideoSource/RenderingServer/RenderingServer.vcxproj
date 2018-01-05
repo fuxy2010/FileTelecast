@@ -59,7 +59,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;OSIP_MT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.\;..\useragent;..\jrtplib;..\utility\boost_1_46_1;..\utility\tut;..\utility\H264;..\utility\ffmpeg\include;..\utility\poco-1.7.6\include;..\module;..\codec;..\task;..\thread;..\misc;..\amr-nb;..\json;..\avi;..\PCMPlayer;..\sipua;..\wua;..\ffmpeg\include;..\rtmp\include;..\rtmp;..\dev\dh;..\dev\dp;..\dev;..\dev\hktmcp;..\http;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;..\useragent;..\jrtplib;..\utility\boost_1_46_1;..\utility\tut;..\utility\H264;..\utility\ffmpeg\include;..\utility\poco-1.7.6\include;..\module;..\codec;..\task;..\thread;..\misc;..\amr-nb;..\json;..\avi;..\PCMPlayer;..\sipua;..\wua;..\ffmpeg\include;..\rtmp\include;..\rtmp;..\dev\dh;..\dev\dp;..\dev;..\dev\hktmcp;..\http;..\RTSPServer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -98,7 +98,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;OSIP_MT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.\;..\useragent;..\jrtplib;..\utility\boost_1_46_1;..\utility\tut;..\utility\H264;..\utility\ffmpeg\include;..\utility\poco-1.7.6\include;..\module;..\codec;..\task;..\thread;..\misc;..\amr-nb;..\json;..\PCMPlayer;..\sipua;..\wua;..\ffmpeg\include;..\rtmp\include;..\rtmp;..\dev\dh;..\dev\dp;..\dev;..\http;..\dev\hktmcp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;..\useragent;..\jrtplib;..\utility\boost_1_46_1;..\utility\tut;..\utility\H264;..\utility\ffmpeg\include;..\utility\poco-1.7.6\include;..\module;..\codec;..\task;..\thread;..\misc;..\amr-nb;..\json;..\PCMPlayer;..\sipua;..\wua;..\ffmpeg\include;..\rtmp\include;..\rtmp;..\dev\dh;..\dev\dp;..\dev;..\http;..\dev\hktmcp;..\RTSPServer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

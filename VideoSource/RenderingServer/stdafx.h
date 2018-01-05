@@ -87,6 +87,13 @@ using namespace std;
 #pragma comment(lib, "../utility/H264/libx264-135.lib")
 //#pragma comment(lib, "../utility/H264/x264_encoder.lib")
 
+//RTSPServer所生成的库文件均在../RTSPServer/bin/，头文件则在../RTSPServer/
+#ifdef _DEBUG
+//#pragma comment(lib, "../RTSPServer/bin/RTSPServerD.lib")
+#else
+//#pragma comment(lib, "../RTSPServer/bin/RTSPServer.lib")
+#endif
+
 #ifndef HIGHEST_LOG_LEVEL
 #define HIGHEST_LOG_LEVEL 10
 #endif

@@ -89,6 +89,7 @@ namespace ScheduleServer
 		unsigned char _video_frame[65536 * 10];
 		NAL_TYPE _last_video_type;
 		int _video_frame_length;
+		unsigned long _start_timestamp;
 
 		void add_video_frame(unsigned char* frame, int length, unsigned long timestamp)
 		{

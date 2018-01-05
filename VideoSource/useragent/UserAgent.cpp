@@ -176,41 +176,19 @@ AUDIO_PACKET_PTR CUserAgent::fetch_sample_audio_packet()
 	return packet_ptr;
 }
 
-/*int CUserAgent::input_video_packet(unsigned char* packet, unsigned long length)
-{
-	if(true == _first_video_packet)
-	{
-		_first_video_timestamp = timeGetTime();
-		_first_video_packet = false;
-	}
-
-	unsigned long timestamp = timeGetTime() - _first_video_timestamp;//同一帧内数据包均采用同样的时戳
-
-	if(length)
-	{
-		VIDEO_PACKET_PTR packet_ptr;
-
-		CMemPool::malloc_video_packet(packet_ptr);
-
-		packet_ptr.packet->ua_id = _info.id;
-		packet_ptr.packet->sequence = 0;
-		packet_ptr.packet->timestamp = timestamp;
-		packet_ptr.packet->payload_size = length;//净荷长度
-		packet_ptr.packet->mark = true;
-		memcpy(packet_ptr.packet->payload, packet, length);
-
-		//TRACE("\nP1 %d", _video_frame_length);
-		if(SS_NoErr != add_sample_video_packet(packet_ptr))//for sps and pps
-		{
-			CMemPool::free_video_packet(packet_ptr);
-		}
-	}
-
-	return 0;
-}*/
-
 SS_Error CUserAgent::add_sample_video_packet(VIDEO_PACKET_PTR packet)
 {
+#if 0
+	unsigned char* p = packet.packet->payload;
+	TRACE("\n--------- F <%d [%x, %x, %x, %x, %x] > ", packet.packet->payload_size, *(p + 1), *(p + 2), *(p + 3), *(p + 4));
+	if(true)
+	{
+		FILE* f = fopen("live.h264", "ab+");
+		fwrite(packet.packet->payload, 1, packet.packet->payload_size, f);
+		fclose(f);
+	}
+	return SS_NoErr;
+#endif
 	//插入队列前必须先判断否则排序报错!!!
 	if(NULL == packet.packet)
 		return SS_InsertMediaDataFail;
@@ -236,6 +214,7 @@ SS_Error CUserAgent::add_sample_video_packet(VIDEO_PACKET_PTR packet)
 //unsigned long tt = 0;
 VIDEO_PACKET_PTR CUserAgent::fetch_sample_video_packet()
 {
+	//TRACE("\n--------- Fetch %d", _sample_video_packet_list.size());
 	{
 		CSSLocker lock(&_sample_video_packet_list_mutex);
 		

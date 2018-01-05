@@ -30,7 +30,8 @@ _start_recv(false),
 _last_packet_timestamp(0),
 _ua(NULL),
 _initialized(false),
-_wait_for_pause_handle(::CreateEvent(NULL, TRUE/*���Զ���λ*/, FALSE/*��ʼ״̬*/, NULL))
+_wait_for_pause_handle(::CreateEvent(NULL, TRUE/*���Զ���λ*/, FALSE/*��ʼ״̬*/, NULL)),
+_start_timestamp(0)
 {
 	_task_info = task_info;
 
@@ -90,6 +91,10 @@ void CDataRecvTask::on_recv_frame(unsigned char* data, int length, bool sps_pps_
 		return;
 	}
 
+	if(!_start_timestamp) _start_timestamp = timeGetTime();
+	//_timestamp += 67;
+	unsigned long timestamp = timeGetTime() - _start_timestamp;
+
 	if(true == sps_pps_sei_idr)
 	{
 		unsigned char* dat = data;
@@ -97,7 +102,7 @@ void CDataRecvTask::on_recv_frame(unsigned char* data, int length, bool sps_pps_
 
 		int offset = 0;
 		NAL_TYPE type =  CRTMPSession::get_video_packet_type(dat, length, offset);
-		unsigned long timestamp = timeGetTime();
+		//unsigned long timestamp = timeGetTime();
 
 		if(NAL_SPS == type)
 		{
@@ -172,7 +177,7 @@ void CDataRecvTask::on_recv_frame(unsigned char* data, int length, bool sps_pps_
 
 		int offset = 0;
 		NAL_TYPE type =  CRTMPSession::get_video_packet_type(dat, length, offset);
-		unsigned long timestamp = timeGetTime();
+		//unsigned long timestamp = timeGetTime();
 
 		if(NAL_INVALID != type)
 		{

@@ -49,6 +49,9 @@ int CVideoPullTask::init()
 
 	int bitrate = SINGLETON(CConfigBox).get_property_as_int("VideoBitrate", 1024);
 	//_x264_handle = H264EncodeInit(_task_info.video_width, _task_info.video_height, 30, 1000, 30, 1024, _task_info.fps);
+	//_x264_handle = H264EncodeInit(_task_info.video_width, _task_info.video_height, 30, 1000, 30, bitrate, _task_info.fps);
+	//_x264_handle = H264EncodeInit(_task_info.video_width, _task_info.video_height, 35, 1000, 30, 512, _task_info.fps);
+
 	_x264_handle = H264EncodeInit(_task_info.video_width, _task_info.video_height, 30, 1000, 30, bitrate, _task_info.fps);
 
 	_last_video_packet_type = NAL_INVALID;
@@ -171,8 +174,11 @@ SS_Error CVideoPullTask::run()
 	_last_video_packet_type = NAL_INVALID;
 	_video_frame_length = 0;
 
+#if 1
 	for(int i = 0; i < i_nal; i++)
 	{
+		//TRACE("\n--------- F %d <%d [%x, %x, %x, %x, %x] > ", i, _nal_len[i], *p, *(p + 1), *(p + 2), *(p + 3), *(p + 4));
+
 		int offset = 0;
 		NAL_TYPE type = CRTMPSession::get_video_packet_type(p, _nal_len[i], offset);
 
@@ -203,6 +209,94 @@ SS_Error CVideoPullTask::run()
 	{
 		on_recv_frame(_video_frame, _video_frame_length, false);
 	}
+#else
+	if(true == _ua->_first_video_packet)
+	{
+		_ua->_first_video_timestamp = timeGetTime();
+		_ua->_first_video_packet = false;
+	}
+
+	//写码流文件
+	unsigned long timestamp = timeGetTime() - _ua->_first_video_timestamp;//同一帧内数据包均采用同样的时戳
+
+	for(int i = 0; i < i_nal; i++)
+	{
+		//TRACE("\n--------- F %d <%d [%x, %x, %x, %x, %x] > ", i, _nal_len[i], *p, *(p + 1), *(p + 2), *(p + 3), *(p + 4));
+		//continue;
+
+		int offset = 0;
+		NAL_TYPE type = CRTMPSession::get_video_packet_type(p, _nal_len[i], offset);
+
+		if(_last_video_packet_type == type)
+		{
+			//::memcpy(_video_frame + _video_frame_length, p + offset, _nal_len[i] - offset);
+			//_video_frame_length += _nal_len[i] - offset;
+			::memcpy(_video_frame + _video_frame_length, p, _nal_len[i]);
+			_video_frame_length += _nal_len[i];
+		}
+		else
+		{
+			if(_video_frame_length)
+			{
+				VIDEO_PACKET_PTR packet_ptr;
+
+				CMemPool::malloc_video_packet(packet_ptr);
+
+				packet_ptr.packet->ua_id = 1;
+				packet_ptr.packet->sequence = 0;
+				packet_ptr.packet->timestamp = timestamp;
+				packet_ptr.packet->payload_size = _video_frame_length;//净荷长度
+				packet_ptr.packet->mark = true;
+				memcpy(packet_ptr.packet->payload, _video_frame, _video_frame_length);
+
+				if(false)
+				{
+					FILE* f = fopen("live2.h264", "ab+");
+					fwrite(_video_frame, 1, _video_frame_length, f);
+					fclose(f);
+				}
+				//TRACE("\nP1 %d", _video_frame_length);
+				if(SS_NoErr != _ua->add_sample_video_packet(packet_ptr))
+				{
+					CMemPool::free_video_packet(packet_ptr);
+				}
+			}
+
+			::memcpy(_video_frame, p, _nal_len[i]);
+			_video_frame_length = _nal_len[i];
+		}
+
+		_last_video_packet_type = type;
+
+		p += _nal_len[i];
+	}
+
+	if(_video_frame_length)
+	{
+		VIDEO_PACKET_PTR packet_ptr;
+
+		CMemPool::malloc_video_packet(packet_ptr);
+
+		packet_ptr.packet->ua_id = 1;
+		packet_ptr.packet->sequence = 0;
+		packet_ptr.packet->timestamp = timestamp;
+		packet_ptr.packet->payload_size = _video_frame_length;//净荷长度
+		packet_ptr.packet->mark = true;
+		memcpy(packet_ptr.packet->payload, _video_frame, _video_frame_length);
+
+		if(false)
+		{
+			FILE* f = fopen("live2.h264", "ab+");
+			fwrite(_video_frame, 1, _video_frame_length, f);
+			fclose(f);
+		}
+		//TRACE("\nP2 %d", _video_frame_length);
+		if(SS_NoErr != _ua->add_sample_video_packet(packet_ptr))
+		{
+			CMemPool::free_video_packet(packet_ptr);
+		}
+	}
+#endif
 
 	return SS_NoErr;
 }

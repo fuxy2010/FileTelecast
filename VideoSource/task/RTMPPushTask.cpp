@@ -14,6 +14,7 @@ using namespace ScheduleServer;
 CRTMPPushTask::CRTMPPushTask(RTMP_PUSH_TASK_INFO& task_info) :
 _status(RTMPPushTask_Begin),
 _ua(NULL),
+//_rtsp_server(NULL),
 _initialized(false)
 {
 	_task_info = task_info;
@@ -60,8 +61,7 @@ int CRTMPPushTask::init_rtmp()
 unsigned long t = 0;
 void CRTMPPushTask::push()
 {
-	if(3000 > timeGetTime() - _start_time)
-		return;
+	//if(3000 > timeGetTime() - _start_time) return;
 
 	if(NULL == _ua)
 		return;
@@ -76,13 +76,11 @@ void CRTMPPushTask::push()
 
 	int ret = -1;
 	{
-		//CSSLocker lock(&_rtmp_send_mutex);
-
 		ret = _rtmp_session.input_video_packet(packet_ptr.packet->payload, packet_ptr.packet->payload_size, packet_ptr.packet->timestamp);
 
 		if(404 != ret)
 		{
-			TRACE("\nV<%d %d %d> ", packet_ptr.packet->payload_size, ret, timeGetTime() - t);//CRTMPSession::get_packet_type(p, _nal_len[i], seprator_len));
+			TRACE("\nV<%d %d %d> @ %d", packet_ptr.packet->payload_size, ret, timeGetTime() - t, packet_ptr.packet->timestamp);//CRTMPSession::get_packet_type(p, _nal_len[i], seprator_len));
 			t = timeGetTime();
 		}
 		else

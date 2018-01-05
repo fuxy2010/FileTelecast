@@ -20,6 +20,7 @@
 #include "UserAgent.h"
 #include "JRTPSession.h"
 #include "RegisterThread.h"
+#include "RTSPServer.h"
 
 #include "TypeDef.h"
 
@@ -78,6 +79,15 @@ namespace ScheduleServer
 				return 0;
 
 			return _server_recv_port_vec[reference % _server_recv_port_vec.size()];
+		}
+
+		RTSPServerLib::CRTSPServer* get_rtsp_server()
+		{
+			int rtsp_on = SINGLETON(CConfigBox).get_property_as_int("RTSP", 1);
+
+			if(!rtsp_on) return NULL;
+
+			return _rtsp_server;
 		}
 
 	public:
@@ -405,6 +415,8 @@ namespace ScheduleServer
 	private:
 		CTask* rtmp_push_task;
 		CTask* sdk_recv_task;
+
+		RTSPServerLib::CRTSPServer* _rtsp_server;
 
 	};
 }

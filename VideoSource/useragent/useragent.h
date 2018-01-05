@@ -104,7 +104,7 @@ namespace ScheduleServer
 		static const unsigned long _max_video_packet_num;//视频数据包队列最大长度
 
 	//////////////////////////////////////////////////////////////////////////
-	private:
+	protected:
 		bool _first_video_packet;
 		unsigned long _first_video_timestamp;
 

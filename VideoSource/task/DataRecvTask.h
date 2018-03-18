@@ -67,7 +67,7 @@ namespace ScheduleServer
 		virtual SS_Error run();
 
 	protected:
-		//virtual SS_Error on_done();
+		//virtual SS_Error on_done() { return SS_NoErr; }
 
 		virtual SS_Error on_exception();
 

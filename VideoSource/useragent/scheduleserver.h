@@ -359,7 +359,7 @@ namespace ScheduleServer
 
 	public:
 		SS_Error add_video_pull_task(unsigned long id, string file);
-		SS_Error add_capture_screen_task(unsigned long id, string window_caption);
+		SS_Error add_capture_screen_task();//(string window_caption);
 		SS_Error remove_capture_screen_task();
 
 	private:
@@ -417,6 +417,9 @@ namespace ScheduleServer
 		CTask* sdk_recv_task;
 
 		RTSPServerLib::CRTSPServer* _rtsp_server;
+
+	public:
+		bool bmp_2_yuv420(unsigned char* buf, int scale_width, int scale_height);
 
 	};
 }

@@ -57,11 +57,14 @@ SS_Error CScheduleServer::start(std::string path)
 
 	SINGLETON(HttpServer::CHttpService).Initialize();
 	SINGLETON(HttpServer::CHttpService).Start("0.0.0.0", SINGLETON(CConfigBox).get_property_as_int("HttpServerPort", 80));
+	//SINGLETON(HttpServer::CHttpService).Start("192.168.1.20", 8888);
 
 	_enalble = true;//服务可用
 
 	_status_edit = (CEdit*)(AfxGetApp()->GetMainWnd()->GetDlgItem(IDC_EDIT_HTTP_SERVICE));//->SetWindowText(decodedURI.c_str());
 	_status = "";
+
+	SINGLETON(CScheduleServer).show_log("start!!!");
 
 	//int rtsp_port = SINGLETON(CConfigBox).get_property_as_int("RTSPServerPort", 1554);
 	//_rtsp_server = new RTSPServerLib::CRTSPServer(rtsp_port);
@@ -389,8 +392,10 @@ SS_Error CScheduleServer::add_video_pull_task(unsigned long id, string file)
 }
 
 #include "CaptureScreenTask.h"
-SS_Error CScheduleServer::add_capture_screen_task(unsigned long id, string window_caption)
+SS_Error CScheduleServer::add_capture_screen_task()//(string window_caption)
 {
+	unsigned long id = MiscTools::parse_string_to_type<unsigned long>(SINGLETON(CConfigBox).get_property("CameraID", "111"));
+
 	LiveCastRequest req;
 
 	LiveCastResponse res = SINGLETON(CScheduleServer).query_livecast_response(req);
@@ -443,13 +448,13 @@ SS_Error CScheduleServer::add_capture_screen_task(unsigned long id, string windo
 			task_info.video_width = SINGLETON(CConfigBox).get_property_as_int("VideoWidth", 640);//640;//1280;//352;
 			task_info.video_height = SINGLETON(CConfigBox).get_property_as_int("VideoHeight", 480);//480;//720;//288;
 
-			task_info.window_caption = window_caption;
+			//task_info.window_caption = window_caption;
 
 			sdk_recv_task = new CCaptureScreenTask(task_info);
 
 			if(false == dynamic_cast<CCaptureScreenTask*>(sdk_recv_task)->is_initialized())
 			{
-				rtmp_push_task->shutdown();
+				//留待remove_capture_screen_task中进行 rtmp_push_task->shutdown();
 				return SS_NoErr;
 			}
 
@@ -458,7 +463,7 @@ SS_Error CScheduleServer::add_capture_screen_task(unsigned long id, string windo
 				delete sdk_recv_task;
 				sdk_recv_task = NULL;
 
-				rtmp_push_task->shutdown();
+				//留待remove_capture_screen_task中进行 rtmp_push_task->shutdown();
 
 				return SS_NoErr;
 			}
@@ -516,7 +521,7 @@ SS_Error CScheduleServer::remove_capture_screen_task()
 	if(NULL != rtmp_push_task) rtmp_push_task->shutdown();
 	if(NULL != sdk_recv_task) sdk_recv_task->shutdown();
 
-	Sleep(3000);
+	Sleep(300);
 
 	return SS_NoErr;
 }
@@ -548,6 +553,10 @@ void CScheduleServer::on_mouse_action(string action, string arg)
 
 			pWnd = pWnd->GetWindow(GW_HWNDNEXT);
 		}
+	}
+	else
+	{
+		return;
 	}
 
 	//光标居中
@@ -589,4 +598,83 @@ void CScheduleServer::on_mouse_action(string action, string arg)
 	{
 		mouse_event(MOUSEEVENTF_WHEEL, 0, 0, -zoom_step, 0);
 	}
+}
+
+#include "RGB2YUV420.h"
+#include "Sizescale.h"
+bool CScheduleServer::bmp_2_yuv420(unsigned char* bmp_yuv, int scale_width, int scale_height)
+{
+	FILE* bmpfile = fopen(SINGLETON(CConfigBox).get_property("BMPFile", "canvas.bmp").c_str(), "rb");
+	if(NULL == bmpfile) return false;
+
+	BITMAPFILEHEADER bmp_file_header;
+	BITMAPINFOHEADER bmp_info_header;
+
+	if(1 != fread(&bmp_file_header, sizeof(BITMAPFILEHEADER), 1, bmpfile)) return false;
+
+	if(0x4D42 != bmp_file_header.bfType) return false;
+
+	if(1 != fread(&bmp_info_header, sizeof(BITMAPINFOHEADER), 1, bmpfile)) return false;
+
+	int width = bmp_info_header.biWidth;
+	int height = bmp_info_header.biHeight;
+
+	unsigned char* rgbbuf = new unsigned char[width * height * 3];
+	unsigned char* ybuf = new unsigned char[width * height];
+	unsigned char* ubuf = new unsigned char[width * height / 4];
+	unsigned char* vbuf = new unsigned char[width * height / 4];
+
+	if (NULL == rgbbuf || NULL == ybuf || NULL == ubuf || NULL == vbuf) return false;
+
+	fread(rgbbuf, 1, width * height * 3, bmpfile);
+
+	RGB2YUV420(width, height, rgbbuf, ybuf, ubuf, vbuf, FALSE);
+
+	int i;
+	for(i = 0; i<width * height; i++)
+	{
+		if (ybuf[i] < 16) ybuf[i] = 16;
+		if (ybuf[i] > 235) ybuf[i] = 235;
+	}
+
+	for (i = 0; i < width * height / 4; i++)
+	{
+		if (ubuf[i] < 16) ubuf[i] = 16;
+		if (ubuf[i] > 240) ubuf[i] = 240;
+
+		if (vbuf[i] < 16) vbuf[i] = 16;
+		if (vbuf[i] > 240) vbuf[i] = 240;
+	}
+
+	//fwrite(ybuf, 1, bmp_info_header.biWidth * bmp_info_header.biHeight, yuvfile);
+	//fwrite(ubuf, 1, (bmp_info_header.biWidth * bmp_info_header.biHeight) / 4, yuvfile);
+	//fwrite(vbuf, 1, (bmp_info_header.biWidth * bmp_info_header.biHeight) / 4, yuvfile);
+
+	unsigned char* yuv = new unsigned char[width * height * 3 / 2];
+	memcpy(yuv, ybuf, width * height);
+	memcpy(yuv + (width * height), ubuf, width * height / 4);
+	memcpy(yuv + (width * height * 5 / 4), vbuf, width * height / 4);
+
+
+	fclose(bmpfile);
+	
+	delete rgbbuf;
+	rgbbuf = NULL;
+
+	delete ybuf;
+	ybuf = NULL;
+
+	delete ubuf;
+	ubuf = NULL;
+
+	delete vbuf;
+	vbuf = NULL;
+
+	//scale
+	{
+		CSizescale::scale(bmp_yuv, scale_width, scale_height, yuv, width, height);
+	}
+
+	delete yuv;
+	yuv = NULL;
 }

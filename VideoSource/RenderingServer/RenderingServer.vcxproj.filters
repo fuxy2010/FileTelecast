@@ -234,6 +234,9 @@
     <ClInclude Include="..\misc\Transcoding.h">
       <Filter>misc</Filter>
     </ClInclude>
+    <ClInclude Include="..\misc\RGB2YUV420.h">
+      <Filter>misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RenderingServer.cpp">
@@ -348,6 +351,9 @@
       <Filter>task</Filter>
     </ClCompile>
     <ClCompile Include="..\misc\Transcoding.cpp">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\misc\RGB2YUV420.cpp">
       <Filter>misc</Filter>
     </ClCompile>
   </ItemGroup>

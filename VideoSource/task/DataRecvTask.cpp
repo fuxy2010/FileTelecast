@@ -202,7 +202,11 @@ SS_Error CDataRecvTask::run()
 		//SINGLETON(CScheduleServer).shutdown_cast(_task_info.ua_id);
 	}
 
-	if (DataRecvTask_Done == _status) return SS_RecvData;
+	if (DataRecvTask_Done == _status)
+	{
+		on_done();
+		return SS_RecvData;
+	}
 
 	switch(_status)
 	{

@@ -21,7 +21,9 @@ using namespace ScheduleServer;
 //CSSMutex CCaptureScreenTask::_sdk_init_mutex;
 
 CCaptureScreenTask::CCaptureScreenTask(SDK_RECV_TASK_INFO& task_info):
-CDataRecvTask(task_info)
+CDataRecvTask(task_info),
+_window_exist(false),
+_bmp_yuv(NULL)
 {
 	if(!connect_device())
 	{
@@ -44,6 +46,8 @@ CDataRecvTask(task_info)
 #include <Windows.h>
 int CCaptureScreenTask::init()
 {
+	_window_exist = check_window();//if(false == check_window()) return -2;
+
 	if(0 != start_capture()) return -1;
 
 	_next_fetch_video_frame_timestamp = 0;
@@ -61,6 +65,15 @@ int CCaptureScreenTask::init()
 
 	_last_video_packet_type = NAL_INVALID;
 	_video_frame_length = 0;
+
+	//读取BMP转YUV备用
+	if(NULL == _bmp_yuv)
+	{
+		_bmp_yuv = new unsigned char[_task_info.video_width * _task_info.video_height * 3 / 2];
+		memset(_bmp_yuv, 0, _task_info.video_width * _task_info.video_height * 3 / 2);
+
+		SINGLETON(CScheduleServer).bmp_2_yuv420(_bmp_yuv, _task_info.video_width, _task_info.video_height);
+	}
 
 	return 0;
 }
@@ -90,9 +103,51 @@ int CCaptureScreenTask::disconnect_device()
 	return 0;
 }
 
+bool CCaptureScreenTask::check_window()
+{
+	string caption = SINGLETON(CConfigBox).get_property("Window", "");
+
+	if(false == caption.empty())
+	{
+		CWnd* pDesktopWnd = CWnd::GetDesktopWindow();
+
+		//2.获得一个子窗口
+		CWnd* pWnd = pDesktopWnd->GetWindow(GW_CHILD);
+		//3.循环取得桌面下的所有子窗口
+		while(pWnd != NULL)
+		{
+			//获得窗口类名
+			CString strClassName = _T("");
+			::GetClassName(pWnd->GetSafeHwnd(),strClassName.GetBuffer(256),256);
+
+			//获得窗口标题
+			CString strWindowText = _T("");
+			::GetWindowText(pWnd->GetSafeHwnd(),strWindowText.GetBuffer(256),256);
+
+			//AfxMessageBox(strWindowText);
+			if(-1 != strWindowText.Find(caption.c_str()))
+			{
+				_task_info.window_caption = strWindowText;
+				return true;
+			}
+
+			//继续下一个子窗口
+			pWnd = pWnd->GetWindow(GW_HWNDNEXT);
+		}
+
+		_task_info.window_caption = caption;
+		return false;
+	}
+
+	_task_info.window_caption = caption;
+	return true;//desktop
+}
+
 SS_Error CCaptureScreenTask::run()
 {
 	if (SS_RecvData != CDataRecvTask::run()) return SS_NoErr;
+
+	if (DataRecvTask_Done == _status) return SS_NoErr;
 
 	if(!_next_fetch_video_frame_timestamp)
 		_next_fetch_video_frame_timestamp = timeGetTime();
@@ -103,16 +158,40 @@ SS_Error CCaptureScreenTask::run()
 		return SS_NoErr;
 	}
 
+#if 1
+	unsigned long t = timeGetTime();
+	if(true == check_window())
+	{
+		if(false == _window_exist)
+		{
+			if(0 != start_capture()) return SS_InvalidTask;
+		}
+
+		_window_exist = true;
+	}
+	else
+	{
+		_window_exist = false;
+	}
+
+	TRACE("\nCAP: %d", timeGetTime() - t);
+#endif
+
 	//TRACE("\nRUN");
 
 	_next_fetch_video_frame_timestamp += _frame_interval;
 
-
-	//unsigned long t1 = timeGetTime();
-	capture();//capture_screen_by_ffmpeg();
+	unsigned long t1 = timeGetTime();
+	//capture();
+	if(true == _window_exist) capture();
 	//unsigned long t2 = timeGetTime();
 	//CSizescale::scale(_yuv2, _task_info.video_width, _task_info.video_height, _yuv, _screen_width, _screen_height);
 	//TRACE("\nScreen: %d, %d", t2 - t1, timeGetTime() - t2);
+	else//被捕获程序已退出
+	{
+		//SINGLETON(CScheduleServer).bmp_2_yuv420(_capture_yuv, _task_info.video_width, _task_info.video_height);
+		if(NULL != _bmp_yuv) memcpy(_capture_yuv, _bmp_yuv, _task_info.video_width * _task_info.video_height * 3 / 2);
+	}
 
 	if(false)
 	{
@@ -207,6 +286,9 @@ SS_Error CCaptureScreenTask::on_done()
 	_task_info.clear();
 
 	_is_done = true;
+
+	delete _bmp_yuv;
+	_bmp_yuv = NULL;
 
 	return SS_NoErr;
 }

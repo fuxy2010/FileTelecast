@@ -80,6 +80,9 @@ namespace HttpServer
 
 		int m_state;
 		bool m_running;
+
+	public:
+		void query();
 	};
 }
 

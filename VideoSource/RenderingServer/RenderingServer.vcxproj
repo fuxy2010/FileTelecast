@@ -150,6 +150,7 @@
     <ClInclude Include="..\misc\Locker.h" />
     <ClInclude Include="..\misc\Logger.h" />
     <ClInclude Include="..\misc\MiscTool.h" />
+    <ClInclude Include="..\misc\RGB2YUV420.h" />
     <ClInclude Include="..\misc\Sizescale.h" />
     <ClInclude Include="..\misc\TimeConsuming.h" />
     <ClInclude Include="..\misc\Transcoding.h" />
@@ -202,6 +203,7 @@
     <ClCompile Include="..\misc\librtmp_send264.cpp" />
     <ClCompile Include="..\misc\Logger.cpp" />
     <ClCompile Include="..\misc\MiscTool.cpp" />
+    <ClCompile Include="..\misc\RGB2YUV420.cpp" />
     <ClCompile Include="..\misc\simplest_librtmp_send264.cpp" />
     <ClCompile Include="..\misc\Sizescale.cpp" />
     <ClCompile Include="..\misc\Transcoding.cpp" />

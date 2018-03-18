@@ -239,7 +239,7 @@ void CRenderingServerDlg::OnBnClickedButtonRTMPStart()  //����(���
 		return;
 	}
 
-	//遍历当前窗口
+	/*//遍历当前窗口
 	string caption = SINGLETON(CConfigBox).get_property("Window", "");
 
 	if(false == caption.empty())
@@ -284,10 +284,10 @@ void CRenderingServerDlg::OnBnClickedButtonRTMPStart()  //����(���
 		}
 
 		if(NULL == pWnd) caption = "";
-	}
+	}*/
 	//SINGLETON(CScheduleServer).add_video_pull_task(111, "test.yuv");
 	//SINGLETON(CScheduleServer).add_video_pull_task(111, "720p.yuv");
-	SINGLETON(CScheduleServer).add_capture_screen_task(111, caption);
+	SINGLETON(CScheduleServer).add_capture_screen_task();//(caption);
 
 	m_rtmp_start_btn.EnableWindow(FALSE);
 	m_rtmp_stop_btn.EnableWindow(TRUE);

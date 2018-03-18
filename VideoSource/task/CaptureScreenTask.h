@@ -96,6 +96,12 @@ namespace ScheduleServer
 		void shutdown_capture();
 		int capture();
 
+	private:
+		unsigned char* _bmp_yuv;
+
+	public:
+		//virtual void shutdown() { _status = RTMPPushTask_Done; }
+
 	public:
 		/*void left();
 		void right();
@@ -107,6 +113,10 @@ namespace ScheduleServer
 	private:
 		unsigned char _rtsp_packet[1536];
 		unsigned short _sequence;
+
+	private:
+		bool _window_exist;
+		bool check_window();
 	};
 }
 

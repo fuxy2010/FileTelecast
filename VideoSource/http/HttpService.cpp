@@ -130,6 +130,11 @@ private:
 protected:
 	virtual void run()
 	{
+		{
+			SINGLETON(HttpServer::CHttpService).query();
+			//return;
+		}
+
 		string uri = "";
 		Poco::URI::decode(request().getURI(), uri, false);
 
@@ -144,41 +149,6 @@ protected:
 		string res = "";
 
 		res = on_action(uri);
-		
-		/*if(string::npos != uri.find("startrealplay"))
-		{
-			if(string::npos != uri.find("rtsp://"))
-				res = on_livecast_start(uri);
-			else if(string::npos != uri.find("dsssdk://"))
-				res = on_livecast_start_sdk(uri);
-			else if(string::npos != uri.find("cmssdk://"))
-				res = on_livecast_start_sdk(uri);
-		}
-		else if(string::npos != uri.find("stoprealplay"))
-		{
-			res = on_livecast_stop(uri);
-		}
-		else if(string::npos != uri.find("startvodplay"))
-		{
-			if(string::npos != uri.find("rtsp://"))
-				res = on_vod_start(uri);
-			else if(string::npos != uri.find("dsssdk://"))
-				res = on_vod_start_sdk(uri);
-			else if(string::npos != uri.find("cmssdk://"))
-				res = on_vod_start_sdk(uri);
-		}
-		else if(string::npos != uri.find("stopvodplay"))
-		{
-			res = on_vod_stop(uri);
-		}
-		else if(string::npos != uri.find("seekvodplay"))
-		{
-			res = on_vod_seek(uri);
-		}
-		else
-		{
-			res = return_response(1001, "Invalid request.", "");
-		}*/
 
 		response().setStatusAndReason(Poco::Net::HTTPResponse::HTTP_OK);
 		//Access-Control-Allow-Origin
@@ -286,6 +256,7 @@ void CHttpService::Start(const std::string & ipAddr, int port)
 		delete m_server;
 		m_server = NULL;
 	}
+
 	m_state = HTTP_SERVICE_STATUS_STARTING;
 }
 
@@ -338,4 +309,12 @@ void CHttpService::DoStart(Poco::Util::TimerTask& task)
 			}
 		}
 	}
+}
+
+void CHttpService::query()
+{
+	char status[256];
+	memset(status, 0, sizeof(status));
+	sprintf_s(status, "%d, %d, %d, %d, %d, %d", m_server->currentConnections(), m_server->maxConcurrentConnections(), m_server->currentThreads(), m_server->maxThreads(), m_server->queuedConnections(), m_server->refusedConnections());
+	SINGLETON(CScheduleServer).show_log(status);
 }
